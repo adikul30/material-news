@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Material News</string>
+    <string name="title_activity_main">Main</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dummy_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac vehicula turpis. Nullam mattis augue in interdum consequat. Proin a lectus luctus, rutrum tellus nec, tempor velit. Sed eu elit magna. Nam dapibus aliquam tortor, eget dictum nibh accumsan a. Duis ornare purus libero, a faucibus ligula commodo id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque tempor nisl porttitor, semper sapien at, commodo eros. Pellentesque sollicitudin placerat enim sit amet feugiat. Phasellus dolor quam, commodo vehicula sem vitae, pellentesque maximus nisl. Proin convallis, lectus et mattis porttitor, erat felis tempus elit, ac hendrerit dolor metus sit amet mi. Nulla ullamcorper massa in justo convallis, quis aliquam purus sollicitudin. Nam sodales, ipsum congue tincidunt facilisis, libero ligula consectetur felis, et tristique ante nibh sed mi. Nunc at placerat orci.</string>
+
+    <!--font awesome path-->
+    <string name="font_awesome">fonts/fontawesome-webfont.ttf</string>
+
+    <!--font awesome icons-->
+    <string name="fa_user">&#xf007;</string>
+    <string name="fa_cube">&#xf1b2;</string>
+    <string name="fa_cubes">&#xf1b3;</string>
+    <string name="fa_university">&#xf19c;</string>
+    <string name="fa_list_ol">&#xf0cb;</string>
+    <string name="fa_home">&#xf015;</string>
+    <string name="fa_phone">&#xf095;</string>
+    <string name="fa_envelope_o">&#xf003;</string>
+    <string name="fa_inr">&#xf156;</string>
+    <string name="fa_sort_numeric_asc">&#xf162;</string>
+    <string name="fa_info">&#xf129;</string>
+    <string name="fa_info_circle">&#xf05a;</string>
+    <string name="fa_files_o">&#xf0c5;</string>
+    <string name="fa_train">&#xf238;</string>
+    <string name="fa_stop_circle_o">&#xf28e;</string>
+    <string name="fa_calendar">&#xf073;</string>
+    <string name="fa_wheelchair">&#xf193;</string>
+    <string name="fa_history">&#xf1da;</string>
+    <string name="fa_file">&#xf15b;</string>
+    <string name="fa_bug">&#xf188;</string>
+    <string name="fa_search">&#xf002;</string>
+    <string name="fa_cross">&#xf00d;</string>
+    <string name="fa_newspaper_o">&#xf1ea;</string>
+    <string name="fa_github">&#xf092;</string>
+
+    <string name="invitation_message">Download the Material News app at https://goo.gl/8L8HCj</string>
+
+</resources>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/news_card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingTop="4dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="2.5dp"
+    android:layout_marginEnd="2.5dp"
+    card_view:cardBackgroundColor="#FFFFFF"
+    card_view:cardCornerRadius="3dp"
+    card_view:cardElevation="1.5dp"
+    card_view:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/list_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:contentDescription="Image"
+                android:id="@+id/urlToImage"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_rss_feed_black_18px" />
+
+            <LinearLayout
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="6dp"
+                tools:ignore="MissingPrefix">
+
+                <TextView
+                    android:id="@+id/title"
+                    fontPath="fonts/Roboto-Black.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="top"
+                    android:layout_weight="3"
+                    android:maxLines="3"
+                    android:minLines="3"
+                    android:textSize="16sp"
+                    tools:text="Electronic Entertainment: Which Types of Entertainment Platforms Rock Today" />
+
+                <RelativeLayout
+                    android:layout_marginTop="2.5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:padding="4.5dp"
+                        fontPath="fonts/Roboto-Bold.ttf"
+                        android:id="@+id/source"
+                        android:layout_alignParentStart="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rectangle"
+                        android:maxLines="1"
+                        android:textAllCaps="true"
+                        android:textColor="@color/White"
+                        android:textSize="10sp"
+                        tools:text="Wired" />
+
+                    <TextView
+                        android:layout_centerVertical="true"
+                        android:id="@+id/publishedAt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:maxLines="1"
+                        android:textSize="12sp"
+                        tools:text="5 Mar" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/fav_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="24dp">
+
+            <ImageButton
+                android:contentDescription="favouriteButton"
+                android:id="@+id/favorite_button"
+                style="?android:attr/actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:minWidth="48dp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
+
+
+

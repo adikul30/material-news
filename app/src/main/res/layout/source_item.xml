@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/checkboxLayout"
+    android:orientation="horizontal"
+    android:layout_margin="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <CheckBox
+        android:checked="false"
+        app:buttonTint="@color/grey_700"
+        android:id="@+id/checkBox"
+        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/source"
+        android:textColor="@color/grey_700"
+        android:layout_gravity="center_vertical"
+        android:textSize="24sp"
+        tools:text="The Verge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

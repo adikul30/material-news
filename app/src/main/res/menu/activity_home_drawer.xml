@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:icon="@drawable/ic_filter"
+            android:id="@+id/nav_sources"
+            android:title="Filter Sources" />
+
+        <item
+            android:icon="@drawable/ic_share"
+            android:id="@+id/nav_share"
+            android:title="Share" />
+
+        <item
+            android:icon="@drawable/ic_info_black_24dp"
+            android:id="@+id/nav_about"
+            android:title="About" />
+
+    </group>
+
+</menu>
