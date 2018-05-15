@@ -38,8 +38,8 @@ android {
         debug {
 //            buildConfigField ('String', "ApiKey", apiKey)
             buildConfigField("String", "NEWS_API_KEY", NEWS_API_KEY)
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

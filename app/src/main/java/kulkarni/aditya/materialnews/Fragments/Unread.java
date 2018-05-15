@@ -71,7 +71,7 @@ public class Unread extends Fragment {
         rootLayout = (RelativeLayout) rootView.findViewById(R.id.unreadFragment);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.unread_recycler_view);
         animationView = (LottieAnimationView) rootView.findViewById(R.id.lottie_animation_view);
-        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+//        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -80,30 +80,30 @@ public class Unread extends Fragment {
 
         new getSourcesFromDb().execute();
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    fab.show();
-                }
-
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 ||dy<0 && fab.isShown()) {
-                    fab.hide();
-                }
-            }
-        });
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), FilterSources.class));
-            }
-        });
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    fab.show();
+//                }
+//
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                if (dy > 0 ||dy<0 && fab.isShown()) {
+//                    fab.hide();
+//                }
+//            }
+//        });
+//
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), FilterSources.class));
+//            }
+//        });
 
         return rootView;
     }
@@ -121,7 +121,7 @@ public class Unread extends Fragment {
 
         call.enqueue(new Callback<NewsResponse>() {
             @Override
-            public void onResponse(Call<NewsResponse> call, retrofit2.Response<NewsResponse> response) {
+            public void onResponse(@NonNull Call<NewsResponse> call, @NonNull retrofit2.Response<NewsResponse> response) {
 
                 NewsResponse newsResponse = response.body();
                 newsSQLite.addAllNews(newsResponse.getNewsArticleList());
@@ -130,7 +130,7 @@ public class Unread extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<NewsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
                 Log.d("failure", t.toString()+"");
             }
         });

@@ -54,7 +54,7 @@ public class Home extends AppCompatActivity
     private GoogleApiClient mGoogleApiClient;
     LottieAnimationView animationView;
     NavigationView navigationView;
-//    FloatingActionButton fab;
+    FloatingActionButton fab;
     // Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
@@ -66,7 +66,7 @@ public class Home extends AppCompatActivity
 
         animationView = (LottieAnimationView) findViewById(R.id.animation_view);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -105,7 +105,7 @@ public class Home extends AppCompatActivity
 
         viewPager.setCurrentItem(0, true);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition(), true);
@@ -151,12 +151,12 @@ public class Home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-/*        fab.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(Home.this, FilterSources.class));
             }
-        });*/
+        });
 
         if (getIntent().getExtras() != null) {
             if (getIntent().getBooleanExtra("isFirstTime", false)) {
