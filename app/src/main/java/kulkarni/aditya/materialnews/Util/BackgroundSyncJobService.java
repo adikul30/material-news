@@ -1,5 +1,6 @@
 package kulkarni.aditya.materialnews.Util;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import com.firebase.jobdispatcher.JobService;
 
 import java.util.ArrayList;
 
+import kulkarni.aditya.materialnews.Model.NewsArticle;
 import kulkarni.aditya.materialnews.Model.NewsResponse;
 import kulkarni.aditya.materialnews.Model.Sources;
 import kulkarni.aditya.materialnews.R;
@@ -27,15 +29,17 @@ import retrofit2.Callback;
 public class BackgroundSyncJobService extends JobService {
     private NewsSQLite newsSQLite;
     private ArrayList<Sources> sourceArrayList;
+    private ArrayList<NewsArticle> newsArticleArrayList;
     StringBuilder sourcesString = new StringBuilder();
-    private AsyncTask mBackgroundTask;
+    private AsyncTask mGetSourcesTask;
+    private AsyncTask mGetTopNewsTask;
     public static final String PRIMARY_CHANNEL = "default";
 
     @Override
     public boolean onStartJob(JobParameters job) {
         initNotification();
         newsSQLite = new NewsSQLite(this);
-        mBackgroundTask = new AsyncTask() {
+        mGetSourcesTask = new AsyncTask() {
 
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -54,7 +58,7 @@ public class BackgroundSyncJobService extends JobService {
                 networkCall();
             }
         };
-        mBackgroundTask.execute();
+        mGetSourcesTask.execute();
         return true;
     }
 
@@ -70,17 +74,21 @@ public class BackgroundSyncJobService extends JobService {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
     }
 
     @Override
     public boolean onStopJob(JobParameters job) {
-        if (mBackgroundTask != null) mBackgroundTask.cancel(true);
+        if (mGetSourcesTask != null) {
+            mGetSourcesTask.cancel(true);
+        }
         return true;
     }
 
-    private void networkCall(){
+    private void networkCall() {
         APIClient apiClient = RetrofitInstance.getRetrofitInstance().create(APIClient.class);
 
         Call<NewsResponse> call = apiClient.getTopHeadlines(sourcesString.toString());
@@ -88,23 +96,60 @@ public class BackgroundSyncJobService extends JobService {
         call.enqueue(new Callback<NewsResponse>() {
             @Override
             public void onResponse(@NonNull Call<NewsResponse> call, @NonNull retrofit2.Response<NewsResponse> response) {
-                Log.d("Service","hi there");
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
-                        .setSmallIcon(R.drawable.newspaper_icon)
-                        .setContentTitle("hi")
-                        .setContentText("hi")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);
 
-                notificationManager.notify(34653, mBuilder.build());
                 NewsResponse newsResponse = response.body();
-                newsSQLite.addAllNews(newsResponse.getNewsArticleList());
+                if (newsResponse != null) {
+                    int previousCount = newsSQLite.getNewsCount();
+                    newsSQLite.addAllNews(newsResponse.getNewsArticleList());
+                    getUnread(previousCount);
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
-                Log.d("failure", t.toString()+"");
+                Log.d("failure", t.toString() + "");
             }
         });
+    }
+
+    private void getUnread(final int previousCount) {
+        int currentCount = newsSQLite.getNewsCount();
+        final int difference = currentCount - previousCount;
+        if (difference > 0) {
+            mGetTopNewsTask = new AsyncTask() {
+
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    newsArticleArrayList = new ArrayList<>();
+                    newsArticleArrayList = newsSQLite.getTopNRows(difference);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Object o) {
+                    super.onPostExecute(o);
+
+                }
+            };
+            mGetTopNewsTask.execute();
+            sendNotification(difference);
+        }
+
+    }
+
+    private void sendNotification(int count){
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
+                .setSmallIcon(R.drawable.newspaper_icon)
+                .setContentTitle("Material News")
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setContentText(count + " new notifications")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        for (int i = 0; i < count; i++){
+            inboxStyle.addLine(newsArticleArrayList.get(i).getTitle());
+        }
+        mBuilder.setStyle(inboxStyle);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);
+        notificationManager.notify(5468, mBuilder.build());
     }
 }

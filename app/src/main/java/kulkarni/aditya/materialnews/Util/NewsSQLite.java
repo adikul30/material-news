@@ -124,6 +124,28 @@ public class NewsSQLite extends SQLiteOpenHelper {
         return newsList;
     }
 
+    public ArrayList<NewsArticle> getTopNRows(int limit){
+        ArrayList<NewsArticle> newsList = new ArrayList<>();
+        String selectAllRows = "SELECT * FROM " + Constants.TABLE_NEWS + " LIMIT " + limit;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectAllRows, null);
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            NewsArticle newsArticleObject = new NewsArticle();
+            newsArticleObject.setAuthor(cursor.getString(cursor.getColumnIndex(Constants.AUTHOR)));
+            newsArticleObject.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));
+            newsArticleObject.setDescription(cursor.getString(cursor.getColumnIndex(Constants.DESCRIPTION)));
+            newsArticleObject.setUrl(cursor.getString(cursor.getColumnIndex(Constants.URL)));
+            newsArticleObject.setUrlToImage(cursor.getString(cursor.getColumnIndex(Constants.URL_TO_IMAGE)));
+            newsArticleObject.setPublishedAt(cursor.getString(cursor.getColumnIndex(Constants.PUBLISHED_AT)));
+            newsArticleObject.setSourceInfo(new SourceInfo(cursor.getString(cursor.getColumnIndex(Constants.SOURCES_NAME)),cursor.getString(cursor.getColumnIndex(Constants.SOURCES_ID))));
+            newsList.add(newsArticleObject);
+        }
+        cursor.close();
+        db.close();
+        return newsList;
+    }
+
     public int getRowCount() {
         SQLiteDatabase readableDatabase = this.getReadableDatabase();
         return (int) DatabaseUtils.queryNumEntries(readableDatabase, Constants.TABLE_NEWS);
@@ -268,10 +290,10 @@ public class NewsSQLite extends SQLiteOpenHelper {
     Unused methods
     */
 
-    public int getSourceCount() {
+    public int getNewsCount() {
         int count = 0;
         SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_SOURCES;
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_NEWS;
         Cursor cursor = db.rawQuery(selectQuery, null);
         count = cursor.getCount();
         cursor.close();
