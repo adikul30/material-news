@@ -1,7 +1,5 @@
 package kulkarni.aditya.materialnews.Model;
 
-import android.support.annotation.NonNull;
-
 import java.util.Comparator;
 
 /**

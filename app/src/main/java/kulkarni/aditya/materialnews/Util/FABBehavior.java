@@ -15,8 +15,8 @@ import java.util.List;
  * Created by maverick on 5/15/18.
  */
 
-public class FABAwareScrollingViewBehavior extends AppBarLayout.ScrollingViewBehavior {
-    public FABAwareScrollingViewBehavior(Context context, AttributeSet attrs) {
+public class FABBehavior extends AppBarLayout.ScrollingViewBehavior {
+    public FABBehavior(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

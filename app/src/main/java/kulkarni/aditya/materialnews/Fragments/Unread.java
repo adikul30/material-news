@@ -1,13 +1,11 @@
 package kulkarni.aditya.materialnews.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
-import kulkarni.aditya.materialnews.Activities.FilterSources;
 import kulkarni.aditya.materialnews.Adapters.NewsAdapter;
 import kulkarni.aditya.materialnews.Model.NewsArticle;
 import kulkarni.aditya.materialnews.Model.NewsResponse;
@@ -53,10 +50,10 @@ public class Unread extends Fragment {
     NetworkInfo activeNetwork;
     RecyclerView recyclerView;
     Context mContext;
-    FloatingActionButton fab;
     LottieAnimationView animationView;
 
     public Unread() {
+
     }
 
     @Override
@@ -71,7 +68,6 @@ public class Unread extends Fragment {
         rootLayout = (RelativeLayout) rootView.findViewById(R.id.unreadFragment);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.unread_recycler_view);
         animationView = (LottieAnimationView) rootView.findViewById(R.id.lottie_animation_view);
-//        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -80,37 +76,12 @@ public class Unread extends Fragment {
 
         new getSourcesFromDb().execute();
 
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    fab.show();
-//                }
-//
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                if (dy > 0 ||dy<0 && fab.isShown()) {
-//                    fab.hide();
-//                }
-//            }
-//        });
-//
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getActivity(), FilterSources.class));
-//            }
-//        });
-
         return rootView;
     }
 
     private void gettingNews() {
 
-        newsSQLite.dropNewsTable();    //Dropping and adding
+//        newsSQLite.dropNewsTable();    //Dropping and adding
 
         progressBar.setVisibility(View.VISIBLE);
 

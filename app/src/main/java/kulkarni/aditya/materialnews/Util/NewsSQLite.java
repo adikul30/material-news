@@ -74,23 +74,32 @@ public class NewsSQLite extends SQLiteOpenHelper {
         Log.d(TAG, String.valueOf(newsArticle.size()));
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        int flag = 0;
         for (int i = 0; i < newsArticle.size(); i++) {
 
-            values.put(Constants.AUTHOR, newsArticle.get(i).getAuthor());
-            values.put(Constants.TITLE, newsArticle.get(i).getTitle());
-            values.put(Constants.DESCRIPTION, newsArticle.get(i).getDescription());
-            values.put(Constants.URL, newsArticle.get(i).getUrl());
-            values.put(Constants.URL_TO_IMAGE, newsArticle.get(i).getUrlToImage());
-            values.put(Constants.PUBLISHED_AT, newsArticle.get(i).getPublishedAt());
-            values.put(Constants.SOURCES_NAME, newsArticle.get(i).getSourceInfo().getName());
-            values.put(Constants.SOURCES_ID, newsArticle.get(i).getSourceInfo().getId());
+            Cursor cursor = db.rawQuery("SELECT " + Constants.TITLE + " FROM " + Constants.TABLE_NEWS ,null);
+            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                if(String.valueOf(newsArticle.get(i).getTitle()).equals(cursor.getString(cursor.getColumnIndex(Constants.TITLE)))){
+                    flag = 1;
+                }
+            }
+            cursor.close();
+            if(flag == 0) {
+                values.put(Constants.AUTHOR, newsArticle.get(i).getAuthor());
+                values.put(Constants.TITLE, newsArticle.get(i).getTitle());
+                values.put(Constants.DESCRIPTION, newsArticle.get(i).getDescription());
+                values.put(Constants.URL, newsArticle.get(i).getUrl());
+                values.put(Constants.URL_TO_IMAGE, newsArticle.get(i).getUrlToImage());
+                values.put(Constants.PUBLISHED_AT, newsArticle.get(i).getPublishedAt());
+                values.put(Constants.SOURCES_NAME, newsArticle.get(i).getSourceInfo().getName());
+                values.put(Constants.SOURCES_ID, newsArticle.get(i).getSourceInfo().getId());
 
-            db.insert(Constants.TABLE_NEWS, null, values);
+                db.insert(Constants.TABLE_NEWS, null, values);
+            }
 
         }
 
-
-//        db.close();
+        db.close();
     }
 
     public ArrayList<NewsArticle> getAllRows() {
@@ -111,7 +120,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
             newsList.add(newsArticleObject);
         }
         cursor.close();
-//        db.close();
+        db.close();
         return newsList;
     }
 

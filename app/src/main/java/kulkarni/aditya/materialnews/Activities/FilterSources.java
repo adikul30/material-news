@@ -86,7 +86,10 @@ public class FilterSources extends AppCompatActivity {
         super.onBackPressed();
         ArrayList<Sources> sources = sourcesAdapter.getSelectedList();
         int count = sourcesAdapter.getSelectedSize();
-        if (count != 0) newsSQLite.dropSourcesTable();
+        if (count != 0) {
+            newsSQLite.dropSourcesTable();
+            newsSQLite.dropNewsTable();
+        }
         for (int i = 0; i < sources.size(); i++) {
             Log.v("selectedlist", sources.get(i).getSource());
             newsSQLite.addSource(sources.get(i).getSource());

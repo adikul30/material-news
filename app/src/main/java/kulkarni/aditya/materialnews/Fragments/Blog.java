@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
