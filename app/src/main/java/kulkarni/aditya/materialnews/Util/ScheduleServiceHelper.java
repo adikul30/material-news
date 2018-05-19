@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 public class ScheduleServiceHelper {
 
-    private static final int SYNC_INTERVAL_MINUTES = 180;
+    private static final int SYNC_INTERVAL_MINUTES = 30;
     private static final int SYNC_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(SYNC_INTERVAL_MINUTES));
-    private static final int SYNC_FLEXTIME_MINUTES = 15;
+    private static final int SYNC_FLEXTIME_MINUTES = 10;
     private static final int SYNC_FLEXTIME_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(SYNC_FLEXTIME_MINUTES));
 
     private static final String REMINDER_JOB_TAG = "background_sync";

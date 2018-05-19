@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -12,6 +13,7 @@ import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -29,14 +31,18 @@ import retrofit2.Callback;
 public class BackgroundSyncJobService extends JobService {
     private NewsSQLite newsSQLite;
     private ArrayList<Sources> sourceArrayList;
-    private ArrayList<NewsArticle> newsArticleArrayList;
+    private ArrayList<NewsArticle> newsArticleArrayList = new ArrayList<>();
     StringBuilder sourcesString = new StringBuilder();
     private AsyncTask mGetSourcesTask;
     private AsyncTask mGetTopNewsTask;
     public static final String PRIMARY_CHANNEL = "default";
-
+    public static final String SOURCES = "sources";
+    public static final String COUNTS = "counts";
+    private FirebaseAnalytics mFirebaseAnalytics;
+    Bundle bundle;
     @Override
     public boolean onStartJob(JobParameters job) {
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initNotification();
         newsSQLite = new NewsSQLite(this);
         mGetSourcesTask = new AsyncTask() {
@@ -49,6 +55,9 @@ public class BackgroundSyncJobService extends JobService {
                     sourcesString.append(sourceArrayList.get(i).getSource());
                     sourcesString.append(",");
                 }
+                bundle = new Bundle();
+                bundle.putString("sources_string",sourcesString.toString());
+                mFirebaseAnalytics.logEvent(SOURCES, bundle);
                 return null;
             }
 
@@ -115,6 +124,11 @@ public class BackgroundSyncJobService extends JobService {
     private void getUnread(final int previousCount) {
         int currentCount = newsSQLite.getNewsCount();
         final int difference = currentCount - previousCount;
+        bundle = new Bundle();
+        bundle.putString("currentCount", String.valueOf(currentCount));
+        bundle.putString("previousCount", String.valueOf(previousCount));
+        bundle.putString("difference", String.valueOf(difference));
+        mFirebaseAnalytics.logEvent(COUNTS,bundle);
         if (difference > 0) {
             mGetTopNewsTask = new AsyncTask() {
 
@@ -128,25 +142,30 @@ public class BackgroundSyncJobService extends JobService {
                 @Override
                 protected void onPostExecute(Object o) {
                     super.onPostExecute(o);
-
+                    sendNotification(difference);
                 }
             };
             mGetTopNewsTask.execute();
-            sendNotification(difference);
         }
-
     }
 
     private void sendNotification(int count){
+        bundle = new Bundle();
+        bundle.putString("notif_count", String.valueOf(count));
+        bundle.putString("notif_list_size", String.valueOf(newsArticleArrayList.size()));
+        mFirebaseAnalytics.logEvent(COUNTS,bundle);
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
-                .setSmallIcon(R.drawable.newspaper_icon)
-                .setContentTitle("Material News")
+                .setSmallIcon(R.drawable.ic_icons8_google_news)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setContentText(count + " new notifications")
+                .setContentTitle(count + " new notifications")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         for (int i = 0; i < count; i++){
             inboxStyle.addLine(newsArticleArrayList.get(i).getTitle());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mBuilder.setColor(getColor(R.color.blue_500));
         }
         mBuilder.setStyle(inboxStyle);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);
