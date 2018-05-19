@@ -6,14 +6,14 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".Util.CalligraphyApplication"
+        android:name=".util.CalligraphyApplication"
         android:allowBackup="true"
         android:icon="@drawable/newspaper_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.Splash"
+            android:name=".activities.Splash"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,11 +22,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.SignIn"
+            android:name=".activities.SignIn"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".Activities.Home"
+            android:name=".activities.Home"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -39,16 +39,16 @@
             android:value="55514a1d8516ae87d2b3ebf2e9c55b6085570edd" />
 
         <activity
-            android:name=".Activities.FilterSources"
-            android:parentActivityName=".Activities.Home"
+            android:name=".activities.FilterSources"
+            android:parentActivityName=".activities.Home"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".Activities.About"
-            android:parentActivityName=".Activities.Home"
+            android:name=".activities.About"
+            android:parentActivityName=".activities.Home"
             android:screenOrientation="portrait" />
 
-        <service android:name=".Util.FCMInstanceIDService">
+        <service android:name=".network.FCMInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -63,11 +63,11 @@
             android:resource="@color/blue_500" />
 
         <activity
-            android:name=".Activities.SearchResults"
+            android:name=".activities.SearchResults"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".Activities.Home">
+            android:parentActivityName=".activities.Home">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -78,7 +78,7 @@
         </activity>
 
         <service
-            android:name=".Util.BackgroundSyncJobService"
+            android:name=".network.BackgroundSyncJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>

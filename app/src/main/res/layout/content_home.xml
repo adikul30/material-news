@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/content_home"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="kulkarni.aditya.materialnews.Activities.Home"
+    tools:context="kulkarni.aditya.materialnews.activities.Home"
     tools:showIn="@layout/app_bar_home">
 
 </android.support.constraint.ConstraintLayout>

@@ -30,7 +30,7 @@
         android:id="@+id/viewPagerActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="kulkarni.aditya.materialnews.Util.FABBehavior" />
+        app:layout_behavior="kulkarni.aditya.materialnews.util.FABBehavior" />
 
     <include layout="@layout/content_home" />
 
