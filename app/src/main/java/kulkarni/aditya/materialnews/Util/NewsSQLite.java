@@ -75,10 +75,10 @@ public class NewsSQLite extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         int flag = 0;
-        for (int i = 0; i < newsArticle.size(); i++) {
+        for (int i = newsArticle.size() - 1; i >= 0; i--) {     //storing in reverse
 
             Cursor cursor = db.rawQuery("SELECT " + Constants.TITLE + " FROM " + Constants.TABLE_NEWS ,null);
-            for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+            for(cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()){
                 if(String.valueOf(newsArticle.get(i).getTitle()).equals(cursor.getString(cursor.getColumnIndex(Constants.TITLE)))){
                     flag = 1;
                 }
@@ -108,7 +108,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAllRows, null);
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+        for (cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()) {
             NewsArticle newsArticleObject = new NewsArticle();
             newsArticleObject.setAuthor(cursor.getString(cursor.getColumnIndex(Constants.AUTHOR)));
             newsArticleObject.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));
@@ -130,7 +130,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAllRows, null);
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+        for (cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()) {
             NewsArticle newsArticleObject = new NewsArticle();
             newsArticleObject.setAuthor(cursor.getString(cursor.getColumnIndex(Constants.AUTHOR)));
             newsArticleObject.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));
