@@ -3,6 +3,9 @@ package kulkarni.aditya.materialnews.network;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 
 import kulkarni.aditya.materialnews.R;
+import kulkarni.aditya.materialnews.activities.Home;
 import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.NewsResponse;
@@ -156,11 +160,13 @@ public class BackgroundSyncJobService extends JobService {
         bundle.putString("notif_list_size", String.valueOf(newsArticleArrayList.size()));
         mFirebaseAnalytics.logEvent(COUNTS,bundle);
 
+        //Notification setup
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
                 .setSmallIcon(R.drawable.ic_icons8_google_news)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentTitle(count + " new notifications")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         for (int i = 0; i < count; i++){
             inboxStyle.addLine(newsArticleArrayList.get(i).getTitle());
@@ -169,6 +175,14 @@ public class BackgroundSyncJobService extends JobService {
             mBuilder.setColor(getColor(R.color.blue_500));
         }
         mBuilder.setStyle(inboxStyle);
+
+        //PendingIntent setup
+        Intent activityFromNotification = new Intent(BackgroundSyncJobService.this, Home.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(BackgroundSyncJobService.this);
+        stackBuilder.addNextIntentWithParentStack(activityFromNotification);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(notificationPendingIntent);
+
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);
         notificationManager.notify(5468, mBuilder.build());
     }
