@@ -58,6 +58,9 @@ public class NewsSQLite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.v("TAG", "create after drop");
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_NEWS);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_SOURCES);
+        db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_PINNED);
         db.execSQL(CREATE_NEWS_TABLE);
         db.execSQL(CREATE_SOURCES_TABLE);
         db.execSQL(CREATE_PINNED_TABLE);
@@ -125,13 +128,14 @@ public class NewsSQLite extends SQLiteOpenHelper {
         return newsList;
     }
 
-    public ArrayList<NewsArticle> getTopNRows(int limit){
+    public ArrayList<NewsArticle> getTopNRows(int limit){       //use limit to get tuples from the bottom
         ArrayList<NewsArticle> newsList = new ArrayList<>();
-        String selectAllRows = "SELECT * FROM " + Constants.TABLE_NEWS + " LIMIT " + limit;
+        String selectAllRows = "SELECT * FROM " + Constants.TABLE_NEWS;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAllRows, null);
 
         for (cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()) {
+            limit--;
             NewsArticle newsArticleObject = new NewsArticle();
             newsArticleObject.setAuthor(cursor.getString(cursor.getColumnIndex(Constants.AUTHOR)));
             newsArticleObject.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));
@@ -141,6 +145,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
             newsArticleObject.setPublishedAt(cursor.getString(cursor.getColumnIndex(Constants.PUBLISHED_AT)));
             newsArticleObject.setSourceInfo(new SourceInfo(cursor.getString(cursor.getColumnIndex(Constants.SOURCES_NAME)),cursor.getString(cursor.getColumnIndex(Constants.SOURCES_ID))));
             newsList.add(newsArticleObject);
+            if(limit == 0)break;
         }
         cursor.close();
         db.close();
