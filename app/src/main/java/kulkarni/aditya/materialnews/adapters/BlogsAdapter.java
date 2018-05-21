@@ -1,84 +1,64 @@
-package kulkarni.aditya.materialnews.adapters;
+package kulkarni.aditya.materialnews.adapters
 
-import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.support.customtabs.CustomTabsIntent
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 
-import java.util.ArrayList;
+import java.util.ArrayList
 
-import kulkarni.aditya.materialnews.R;
-import kulkarni.aditya.materialnews.model.Blogs;
+import kulkarni.aditya.materialnews.R
+import kulkarni.aditya.materialnews.model.Blogs
 
 /**
  * Created by adicool on 09-11-2017.
  */
 
-public class BlogsAdapter extends RecyclerView.Adapter<BlogsAdapter.ViewHolder> {
+class BlogsAdapter(private val blogsArrayList: ArrayList<Blogs>?, private val mContext: Context) : RecyclerView.Adapter<BlogsAdapter.ViewHolder>() {
+    private var elementPosition: Int = 0
 
-    private ArrayList<Blogs> blogsArrayList;
-    private Context mContext;
-    private int elementPosition;
-
-    public BlogsAdapter(ArrayList<Blogs> blogsArrayList, Context mContext) {
-        this.blogsArrayList = blogsArrayList;
-        this.mContext = mContext;
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val rootView = LayoutInflater.from(parent.context).inflate(R.layout.blog_item, parent, false)
+        return ViewHolder(rootView)
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.blog_item,parent,false);
-        return new ViewHolder(rootView);
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.blogName.text = blogsArrayList!![position].blogName
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.blogName.setText(blogsArrayList.get(position).getBlogName());
+    override fun getItemCount(): Int {
+        return blogsArrayList?.size ?: 0
     }
 
-    @Override
-    public int getItemCount() {
-        if(blogsArrayList == null){
-            return 0;
-        } else {
-            return blogsArrayList.size();
-        }
-    }
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+        internal var blogName: TextView
 
-        TextView blogName;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            blogName = (TextView) itemView.findViewById(R.id.blog_source);
-            blogName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    elementPosition = getAdapterPosition();
-                    Blogs model = blogsArrayList.get(elementPosition);
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    builder.addDefaultShareMenuItem();
-                    builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.getResources(),
-                            R.mipmap.ic_arrow_back_white_24dp));
-                    builder.setToolbarColor(mContext.getResources().getColor(R.color.colorPrimary));
-                    builder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left);
-                    builder.setExitAnimations(mContext, R.anim.slide_in_left, R.anim.slide_out_right);
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.launchUrl(mContext, Uri.parse(model.getBlogUrl()));
-                }
-            });
+        init {
+            blogName = itemView.findViewById<View>(R.id.blog_source) as TextView
+            blogName.setOnClickListener {
+                elementPosition = adapterPosition
+                val model = blogsArrayList!![elementPosition]
+                val builder = CustomTabsIntent.Builder()
+                builder.addDefaultShareMenuItem()
+                builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.resources,
+                        R.mipmap.ic_arrow_back_white_24dp))
+                builder.setToolbarColor(mContext.resources.getColor(R.color.colorPrimary))
+                builder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left)
+                builder.setExitAnimations(mContext, R.anim.slide_in_left, R.anim.slide_out_right)
+                val customTabsIntent = builder.build()
+                customTabsIntent.launchUrl(mContext, Uri.parse(model.blogUrl))
+            }
         }
 
     }
 
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
     }
 }
