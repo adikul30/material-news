@@ -29,6 +29,8 @@ import kulkarni.aditya.materialnews.model.Sources;
 import retrofit2.Call;
 import retrofit2.Callback;
 
+import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
+
 /**
  * Created by maverick on 5/16/18.
  */
@@ -165,6 +167,8 @@ public class BackgroundSyncJobService extends JobService {
                 .setSmallIcon(R.drawable.ic_icons8_google_news)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setContentTitle(count + " new notifications")
+                .setVisibility(VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();

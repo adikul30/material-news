@@ -161,16 +161,12 @@ public class NewsSQLite extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_NEWS);
         db.execSQL(CREATE_NEWS_TABLE);
-//        db.close();
-//        onCreate(db);
     }
 
     public void dropSourcesTable() {
-        Log.v("TAG", "Dropping table");
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + Constants.TABLE_SOURCES);
         db.execSQL(CREATE_SOURCES_TABLE);
-//        onCreate(db);
     }
 
     public ArrayList<NewsArticle> getRowByPosition(int position) {
@@ -237,6 +233,16 @@ public class NewsSQLite extends SQLiteOpenHelper {
         return sourceList;
     }
 
+    public int getNewsCount() {
+        int count = 0;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT * FROM " + Constants.TABLE_NEWS;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     /*
     Pinned methods
     */
@@ -295,16 +301,6 @@ public class NewsSQLite extends SQLiteOpenHelper {
     /*
     Unused methods
     */
-
-    public int getNewsCount() {
-        int count = 0;
-        SQLiteDatabase db = this.getWritableDatabase();
-        String selectQuery = "SELECT * FROM " + Constants.TABLE_NEWS;
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        count = cursor.getCount();
-        cursor.close();
-        return count;
-    }
 
     public void deleteRow(String title) {
         SQLiteDatabase db = this.getWritableDatabase();

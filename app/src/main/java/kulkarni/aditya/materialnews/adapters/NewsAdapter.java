@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -142,6 +143,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     if (mType == 2) {
+                        ArrayList<NewsArticle> newsList = newsSQLite.getRowByPosition(newsArticleArrayList.size() - getAdapterPosition() - 1);
+                        newsSQLite.addNewPinnedRow(newsList);
                         animationView.setVisibility(View.VISIBLE);
                         animationView.setAnimation("TwitterHeart.json");
                         animationView.loop(false);
@@ -168,9 +171,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
                             }
                         });
-                        ArrayList<NewsArticle> newsList = newsSQLite.getRowByPosition(getAdapterPosition());
-                        newsSQLite.addNewPinnedRow(newsList);
-
                     } else {
                         newsSQLite.deletePinnedRow(newsArticleArrayList.get(getAdapterPosition()).getTitle());
                     }
