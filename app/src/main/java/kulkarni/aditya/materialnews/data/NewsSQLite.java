@@ -271,7 +271,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectAllRows, null);
 
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+        for (cursor.moveToLast(); !cursor.isBeforeFirst(); cursor.moveToPrevious()) {
             NewsArticle newsArticleObject = new NewsArticle();
             newsArticleObject.setAuthor(cursor.getString(cursor.getColumnIndex(Constants.AUTHOR)));
             newsArticleObject.setTitle(cursor.getString(cursor.getColumnIndex(Constants.TITLE)));

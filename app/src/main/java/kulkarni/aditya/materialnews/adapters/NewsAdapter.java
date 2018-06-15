@@ -173,6 +173,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                         });
                     } else {
                         newsSQLite.deletePinnedRow(newsArticleArrayList.get(getAdapterPosition()).getTitle());
+                        notifyDataSetChanged();
                     }
                 }
             });
