@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -180,15 +179,3 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         }
     }
 }
-/*    String dateStr = newsArticleArrayList.get(position).getPublishedAt();
-        dateStr = dateStr.substring(0, 10);
-                try {
-                DateFormat srcDf = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
-                Date date = srcDf.parse(dateStr);
-                DateFormat destDf = new SimpleDateFormat("d MMM",Locale.getDefault());
-                dateStr = destDf.format(date);
-                } catch (ParseException e) {
-                e.printStackTrace();
-                }
-
-                holder.publishedAt.setText(dateStr);*/

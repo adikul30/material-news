@@ -41,7 +41,7 @@ import kulkarni.aditya.materialnews.network.ScheduleServiceHelper;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String ANONYMOUS = "anonymous";
     private String mUsername;
@@ -66,8 +66,10 @@ public class Home extends AppCompatActivity
 
         //Action Bar
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Material News");
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.app_name);
+        }
 
         // App Theme Customization
         Window window = this.getWindow();
@@ -75,15 +77,6 @@ public class Home extends AppCompatActivity
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         window.setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
-//        View decorView = getWindow().getDecorView();
-//        // Hide both the navigation bar and the status bar.
-//        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-//        // a general rule, you should design your app to hide the status bar whenever you
-//        // hide the navigation bar.
-//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-//        decorView.setSystemUiVisibility(uiOptions);
 
         //Adding Tabs
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -116,25 +109,25 @@ public class Home extends AppCompatActivity
             }
         });
 
-        mUsername = ANONYMOUS;
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API)
-                .addApi(AppInvite.API)
-                .build();
-
-        // Initialize Firebase Auth
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-        if (mFirebaseUser == null) {
-            // Not signed in, launch the Sign In activity
-            startActivity(new Intent(this, SignIn.class));
-            finish();
-            return;
-        } else {
-            mUsername = mFirebaseUser.getDisplayName();
-        }
+//        mUsername = ANONYMOUS;
+//
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this, this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API)
+//                .addApi(AppInvite.API)
+//                .build();
+//
+//        // Initialize Firebase Auth
+//        mFirebaseAuth = FirebaseAuth.getInstance();
+//        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+//        if (mFirebaseUser == null) {
+//            // Not signed in, launch the Sign In activity
+//            startActivity(new Intent(this, SignIn.class));
+//            finish();
+//            return;
+//        } else {
+//            mUsername = mFirebaseUser.getDisplayName();
+//        }
 
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -233,11 +226,6 @@ public class Home extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
 }

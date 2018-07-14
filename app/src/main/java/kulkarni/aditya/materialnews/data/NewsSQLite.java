@@ -228,7 +228,7 @@ public class NewsSQLite extends SQLiteOpenHelper {
         }
 
         cursor.close();
-//        db.close();
+        db.close();
         Log.v("TAG", "Before list return");
         return sourceList;
     }
@@ -241,6 +241,11 @@ public class NewsSQLite extends SQLiteOpenHelper {
         count = cursor.getCount();
         cursor.close();
         return count;
+    }
+
+    public void dropAllTables(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        onCreate(db);
     }
 
     /*

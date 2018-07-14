@@ -17,7 +17,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class Splash extends AppCompatActivity {
 
     NewsSQLite newsSQLite;
-    ArrayList<NewsArticle> dummyArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,7 @@ public class Splash extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } finally {
-
+                        new NewsSQLite(Splash.this).dropAllTables();
                         //  Make a new preferences editor
                         SharedPreferences.Editor e = getPrefs.edit();
 

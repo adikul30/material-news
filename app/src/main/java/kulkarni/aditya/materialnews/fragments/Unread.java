@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
@@ -45,6 +46,7 @@ public class Unread extends Fragment {
     ArrayList<NewsArticle> newsArticleArrayList = new ArrayList<>();
     StringBuilder sourcesString = new StringBuilder();
     NewsSQLite newsSQLite;
+    View rootView;
     RelativeLayout rootLayout;
     ConnectivityManager connectivityManager;
     NetworkInfo activeNetwork;
@@ -60,22 +62,24 @@ public class Unread extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_unread, container, false);
-        mContext = getActivity();
-        newsSQLite = new NewsSQLite(getActivity());
-        sourceArrayList = new ArrayList<>();
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_unread, container, false);
+            mContext = getActivity();
+            newsSQLite = new NewsSQLite(getActivity());
+            sourceArrayList = new ArrayList<>();
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        rootLayout = (RelativeLayout) rootView.findViewById(R.id.unreadFragment);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.unread_recycler_view);
-        animationView = (LottieAnimationView) rootView.findViewById(R.id.lottie_animation_view);
+            progressBar = rootView.findViewById(R.id.progressBar);
+            rootLayout = rootView.findViewById(R.id.unreadFragment);
+            recyclerView = rootView.findViewById(R.id.unread_recycler_view);
+            animationView = rootView.findViewById(R.id.lottie_animation_view);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        activeNetwork = connectivityManager.getActiveNetworkInfo();
-
-        new getSourcesFromDb().execute();
+            connectivityManager = (ConnectivityManager) Objects.requireNonNull(getActivity()).getSystemService(Context.CONNECTIVITY_SERVICE);
+            assert connectivityManager != null;
+            activeNetwork = connectivityManager.getActiveNetworkInfo();
+            new getSourcesFromDb().execute();
+        }
 
         return rootView;
     }
@@ -103,7 +107,7 @@ public class Unread extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
-                Log.d("failure", t.toString()+"");
+                Log.d("failure", t.toString() + "");
             }
         });
 
