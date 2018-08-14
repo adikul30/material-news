@@ -1,5 +1,10 @@
 package kulkarni.aditya.materialnews.network;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import kulkarni.aditya.materialnews.model.SourceInfo;
+import kulkarni.aditya.materialnews.util.MyDeserializer;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,6 +20,11 @@ public class RetrofitInstance {
 
     public static Retrofit getRetrofitInstance(){
         if(retrofit==null){
+
+            Gson gson =
+                    new GsonBuilder()
+                            .registerTypeAdapter(SourceInfo.class, new MyDeserializer<SourceInfo>())
+                            .create();
 
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

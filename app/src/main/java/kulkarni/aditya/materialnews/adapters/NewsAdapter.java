@@ -18,9 +18,11 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import kulkarni.aditya.materialnews.R;
-import kulkarni.aditya.materialnews.data.NewsSQLite;
+import kulkarni.aditya.materialnews.data.AppExecutor;
+import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 
 /**
@@ -29,41 +31,40 @@ import kulkarni.aditya.materialnews.model.NewsArticle;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
-    private ArrayList<NewsArticle> newsArticleArrayList, newsArticleArrayListCopy;
+    private List<NewsArticle> newsList;
     private Context mContext;
-    private NewsSQLite newsSQLite;
+    //    private NewsSQLite newsSQLite;
     private int mType;
+    DatabaseRoom mDb;
     private LottieAnimationView animationView;
 
-    public NewsAdapter(Context activityContext, int type, ArrayList<NewsArticle> newsArticleList) {
+    public NewsAdapter(Context activityContext, int type) {
+        mDb = DatabaseRoom.getsInstance(activityContext);
         mType = type;
         mContext = activityContext;
-        if (type == 2) {            //Unread
-            newsSQLite = new NewsSQLite(activityContext);
-            this.newsArticleArrayList = newsArticleList;    // Call getAllUnread() here to get only those who haven't been read
-            newsArticleArrayListCopy = new ArrayList<>();
-            newsArticleArrayListCopy.addAll(newsArticleArrayList);
-        } else if (type == 3) {       //Pinned
-            newsSQLite = new NewsSQLite(activityContext);
-            this.newsArticleArrayList = newsArticleList;
+        if (type == 3) {       //Pinned
+//            newsSQLite = new NewsSQLite(activityContext);
+            this.newsList = new ArrayList<>();
         } else if (type == 1) {
-            this.newsArticleArrayList = newsArticleList;
+            this.newsList = new ArrayList<>();
         }
     }
 
-    public NewsAdapter(Context activityContext, int type, ArrayList<NewsArticle> newsArticleList, LottieAnimationView animationView) {
+    public NewsAdapter(Context activityContext, int type, LottieAnimationView animationView) {
+        mDb = DatabaseRoom.getsInstance(activityContext);
         mType = type;
         this.animationView = animationView;
         mContext = activityContext;
         if (type == 2) {            //Unread
-            newsSQLite = new NewsSQLite(activityContext);
-            this.newsArticleArrayList = newsArticleList;    // Call getAllUnread() here to get only those who haven't been read
-            newsArticleArrayListCopy = new ArrayList<>();
-            newsArticleArrayListCopy.addAll(newsArticleArrayList);
-        } else if (type == 3) {       //Pinned
-            newsSQLite = new NewsSQLite(activityContext);
-            this.newsArticleArrayList = newsArticleList;
+//            newsSQLite = new NewsSQLite(activityContext);
+            this.newsList = new ArrayList<>();
         }
+    }
+
+    public void setList(List<NewsArticle> newsArticles) {
+        newsList = new ArrayList<>();
+        this.newsList = newsArticles;
+        notifyDataSetChanged();
     }
 
 
@@ -76,19 +77,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.title.setText(newsArticleArrayList.get(position).getTitle());
-        holder.source.setText(newsArticleArrayList.get(position).getSourceInfo().getName());
-        holder.description.setText(newsArticleArrayList.get(position).getDescription());
+        holder.title.setText(newsList.get(position).getTitle());
+        holder.source.setText(newsList.get(position).getSourceInfo().getName());
+        holder.description.setText(newsList.get(position).getDescription());
 
         Glide.with(mContext.getApplicationContext())
-                .load(newsArticleArrayList.get(position).getUrlToImage())
+                .load(newsList.get(position).getUrlToImage())
                 .into(holder.imageView);
 
         if (mType == 3) {
             holder.imageButton.setImageResource(R.drawable.ic_favorite_black_18px);
         } else if (mType == 2) {
             holder.imageButton.setImageResource(R.drawable.ic_favorite_border_black_18px);
-        } else if (mType == 1){
+        } else if (mType == 1) {
             holder.imageButton.setVisibility(View.GONE);
         }
 
@@ -96,10 +97,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (newsArticleArrayList == null) {
+        if (newsList == null) {
             return 0;
         } else {
-            return newsArticleArrayList.size();
+            return newsList.size();
         }
     }
 
@@ -107,7 +108,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         TextView title;
         TextView description;
         TextView source;
-//        TextView publishedAt;
+        //        TextView publishedAt;
         CardView cardView;
         ImageView imageView, imageButton;
         RelativeLayout favLayout;
@@ -125,7 +126,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = newsArticleArrayList.get(getAdapterPosition()).getUrl();
+                    String url = newsList.get(getAdapterPosition()).getUrl();
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                     builder.addDefaultShareMenuItem();
                     builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.getResources(),
@@ -142,8 +143,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     if (mType == 2) {
-                        ArrayList<NewsArticle> newsList = newsSQLite.getRowByPosition(newsArticleArrayList.size() - getAdapterPosition() - 1);
-                        newsSQLite.addNewPinnedRow(newsList);
+                        AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.newsDao().pinArticle(newsList.get(getAdapterPosition()).getTitle());
+                            }
+                        });
                         animationView.setVisibility(View.VISIBLE);
                         animationView.setAnimation("TwitterHeart.json");
                         animationView.loop(false);
@@ -171,8 +176,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                             }
                         });
                     } else {
-                        newsSQLite.deletePinnedRow(newsArticleArrayList.get(getAdapterPosition()).getTitle());
-                        notifyDataSetChanged();
+                        AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.newsDao().unpinArticle(newsList.get(getAdapterPosition()).getTitle());
+                            }
+                        });
                     }
                 }
             });

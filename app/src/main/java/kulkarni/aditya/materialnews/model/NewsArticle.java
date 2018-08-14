@@ -1,48 +1,72 @@
 package kulkarni.aditya.materialnews.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Relation;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by adicool on 29/5/17.
  */
 
+@Entity(tableName = "newsarticles")
 public class NewsArticle {
-    @SerializedName("author")
-    String author;
 
-    @SerializedName("title")
-    String title;
+/*    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "id")
+    private int id;*/
 
-    @SerializedName("description")
-    String description;
+    private String author;
 
-    @SerializedName("url")
-    String url;
+    @PrimaryKey
+    @NonNull
+    private String title;
 
-    @SerializedName("urlToImage")
-    String urlToImage;
+    private String description;
 
-    @SerializedName("publishedAt")
-    String publishedAt;
+    private String url;
+
+    private String urlToImage;
+
+    private String publishedAt;
+
+    private Boolean isPinned = false;
 
     @SerializedName("source")
-    SourceInfo sourceInfo;
+//    @Expose
+    private SourceInfo sourceInfo;
 
-//    @SerializedName("id")
-//    String id;
-
+    @Ignore
     public NewsArticle() {
+        this.isPinned = false;
     }
 
-    public NewsArticle(String author, String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
+    public NewsArticle(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
+//        this.id = id;
         this.author = author;
         this.title = title;
         this.description = description;
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+        this.isPinned = false;
         this.sourceInfo = sourceInfo;
     }
+
+//    @NonNull
+/*    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
+    }*/
 
     public String getAuthor() {
         return author;
@@ -52,11 +76,12 @@ public class NewsArticle {
         this.author = author;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(@NonNull String title) {
         this.title = title;
     }
 
@@ -100,20 +125,11 @@ public class NewsArticle {
         this.sourceInfo = sourceInfo;
     }
 
-    //    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-}
-/*    String flag;
-
-    public String getFlag() {
-        return flag;
+    public Boolean getPinned() {
+        return isPinned;
     }
 
-    public void setFlag(String flag) {
-        this.flag = flag;
-    }*/
+    public void setPinned(Boolean pinned) {
+        isPinned = pinned;
+    }
+}

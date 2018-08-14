@@ -9,11 +9,10 @@ import java.util.List;
  */
 
 public class NewsResponse {
-    @SerializedName("status")
-    String status;
 
-    @SerializedName("totalResults")
-    int totalResults;
+    private String status;
+
+    private int totalResults;
 
     @SerializedName("articles")
     List<NewsArticle> newsArticleList;

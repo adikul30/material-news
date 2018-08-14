@@ -3,7 +3,7 @@
     android:background="@color/cream_background"
     android:layout_height="wrap_content">
 
-    <TextView
+<!--    <TextView
         android:textStyle="italic"
         android:id="@+id/swipe_to_refresh_text"
         android:layout_width="wrap_content"
@@ -11,10 +11,10 @@
         android:layout_centerHorizontal="true"
         android:paddingTop="5dp"
         android:text="Swipe down to refresh"
-        android:textColor="@color/grey_600"/>
+        android:textColor="@color/grey_600"/>-->
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_below="@id/swipe_to_refresh_text"
+        android:layout_alignParentTop="true"
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -51,7 +51,7 @@ public class SearchResults extends AppCompatActivity {
         noMessagesLayout = findViewById(R.id.no_messages_error_layout);
         progressBar = findViewById(R.id.search_progress_bar);
         searchList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(SearchResults.this, 1, searchList);
+        newsAdapter = new NewsAdapter(SearchResults.this, 1);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ScaleInAnimationAdapter(newsAdapter));
         handleIntent(getIntent());
@@ -84,9 +84,12 @@ public class SearchResults extends AppCompatActivity {
                     }
                     else{
                         noMessagesLayout.setVisibility(View.GONE);
-                        newsAdapter = new NewsAdapter(SearchResults.this, 1, searchList);
-                        recyclerView.setAdapter(new ScaleInAnimationAdapter(newsAdapter));
-                        newsAdapter.notifyDataSetChanged();
+//                        newsAdapter = new NewsAdapter(SearchResults.this, 1);
+//                        recyclerView.setAdapter(new ScaleInAnimationAdapter(newsAdapter));
+//                        newsAdapter.notifyDataSetChanged();
+                        newsAdapter.setList(searchList);
+                        // TODO: 8/15/18 setList
+
                         progressBar.setVisibility(View.GONE);
                     }
                 }

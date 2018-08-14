@@ -1,5 +1,7 @@
 package kulkarni.aditya.materialnews.activities;
 
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,20 +12,26 @@ import android.support.v7.app.AppCompatActivity;
 import java.util.ArrayList;
 
 import kulkarni.aditya.materialnews.R;
+import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.NewsArticle;
+import kulkarni.aditya.materialnews.model.Sources;
+import kulkarni.aditya.materialnews.viewmodels.SourcesViewModel;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Splash extends AppCompatActivity {
 
-    NewsSQLite newsSQLite;
+//    NewsSQLite newsSQLite;
+    SourcesViewModel sourcesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        newsSQLite = new NewsSQLite(this);
+        sourcesViewModel = ViewModelProviders.of(this).get(SourcesViewModel.class);
+
+//        newsSQLite = new NewsSQLite(this);
         final SharedPreferences getPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
         final boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
@@ -32,7 +40,7 @@ public class Splash extends AppCompatActivity {
             final Thread thread = new Thread() {
                 public void run() {
                     try {
-                        sleep(1000);
+                        sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } finally {
@@ -46,9 +54,9 @@ public class Splash extends AppCompatActivity {
                         //  Apply changes
                         e.apply();
 
-                        newsSQLite.addSource("the-verge");
-                        newsSQLite.addSource("techcrunch");
-                        newsSQLite.addSource("wired");
+                        sourcesViewModel.insertSource(new Sources("the-verge",true));
+                        sourcesViewModel.insertSource(new Sources("techcrunch",true));
+                        sourcesViewModel.insertSource(new Sources("wired",true));
 
                         final Intent intent = new Intent(Splash.this, Home.class);
                         startActivity(intent);

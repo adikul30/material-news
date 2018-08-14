@@ -1,18 +1,23 @@
 package kulkarni.aditya.materialnews.model;
 
-import com.google.gson.annotations.SerializedName;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 /**
  * Created by maverick on 3/2/18.
  */
-
+@Entity(tableName = "sourceinfo")
 public class SourceInfo {
-    @SerializedName("id")
-    String id;
 
-    @SerializedName("name")
-    String name;
+    @PrimaryKey
+    @NonNull
+    private String id;
 
+    private String name;
+
+    @Ignore
     public SourceInfo() {
     }
 
