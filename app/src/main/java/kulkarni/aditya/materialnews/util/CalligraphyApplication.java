@@ -3,8 +3,10 @@ package kulkarni.aditya.materialnews.util;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import io.fabric.sdk.android.Fabric;
+import kulkarni.aditya.materialnews.BuildConfig;
 import kulkarni.aditya.materialnews.R;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -24,7 +26,12 @@ public class CalligraphyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+
+        // Initialize Fabric with the debug-disabled crashlytics.
+        Fabric.with(this, crashlyticsKit);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/ProductSans-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)
