@@ -26,7 +26,7 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
         switch (position){
             case 0 : return new Unread();
             case 1 : return new Blog();
-            case 2 : return new Pinned();
+//            case 2 : return new Pinned();
 
             default: return null;
         }

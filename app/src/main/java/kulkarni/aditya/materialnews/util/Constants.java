@@ -27,4 +27,10 @@ public class Constants {
 
     public static final String SOURCE = "source";
     public static final String IS_SELECTED = "isSelected";
+
+    public static final String UNREAD = "unread";
+    public static final String PINNED = "pinned";
+    public static final String SEARCH = "search";
+    public static final String BLOG = "blog";
+
 }

@@ -17,18 +17,13 @@ import com.google.gson.annotations.SerializedName;
 @Entity(tableName = "newsarticles")
 public class NewsArticle {
 
-/*    @PrimaryKey(autoGenerate = true)
-    @NonNull
-    @ColumnInfo(name = "id")
-    private int id;*/
-
-    private String author;
-
     @PrimaryKey
     @NonNull
     private String title;
 
     private String description;
+
+    private String author;
 
     private String url;
 
@@ -36,7 +31,7 @@ public class NewsArticle {
 
     private String publishedAt;
 
-    private Boolean isPinned = false;
+    private boolean isPinned;
 
     @SerializedName("source")
 //    @Expose
@@ -44,29 +39,18 @@ public class NewsArticle {
 
     @Ignore
     public NewsArticle() {
-        this.isPinned = false;
+
     }
 
     public NewsArticle(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
-//        this.id = id;
         this.author = author;
         this.title = title;
         this.description = description;
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
-        this.isPinned = false;
         this.sourceInfo = sourceInfo;
     }
-
-//    @NonNull
-/*    public int getId() {
-        return id;
-    }
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }*/
 
     public String getAuthor() {
         return author;

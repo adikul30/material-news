@@ -19,6 +19,9 @@ public interface SourcesDao {
     @Query("SELECT * FROM sources")
     LiveData<List<Sources>> getSources();
 
+    @Query("SELECT * FROM sources")
+    List<Sources> getSourcesList();
+
     @Query("SELECT COUNT(*) FROM sources")
     int getSourcesCount();
 

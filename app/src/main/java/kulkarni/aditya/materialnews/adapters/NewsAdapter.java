@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,8 @@ import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
+import kulkarni.aditya.materialnews.util.Constants;
+import kulkarni.aditya.materialnews.util.UtilityMethods;
 
 /**
  * Created by adicool on 21/5/17.
@@ -33,35 +37,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private List<NewsArticle> newsList;
     private Context mContext;
-    //    private NewsSQLite newsSQLite;
-    private int mType;
-    DatabaseRoom mDb;
+    private String mType;
+    private DatabaseRoom mDb;
     private LottieAnimationView animationView;
+    private final String TAG = this.getClass().getSimpleName();
 
-    public NewsAdapter(Context activityContext, int type) {
-        mDb = DatabaseRoom.getsInstance(activityContext);
-        mType = type;
+    public NewsAdapter(Context activityContext, String type) {
         mContext = activityContext;
-        if (type == 3) {       //Pinned
-//            newsSQLite = new NewsSQLite(activityContext);
-            this.newsList = new ArrayList<>();
-        } else if (type == 1) {
-            this.newsList = new ArrayList<>();
-        }
+        mDb = DatabaseRoom.getsInstance(mContext);
+        mType = type;
+        this.newsList = new ArrayList<>();
     }
 
-    public NewsAdapter(Context activityContext, int type, LottieAnimationView animationView) {
-        mDb = DatabaseRoom.getsInstance(activityContext);
-        mType = type;
-        this.animationView = animationView;
+    public NewsAdapter(Context activityContext, String type, LottieAnimationView animationView) {
         mContext = activityContext;
-        if (type == 2) {            //Unread
-//            newsSQLite = new NewsSQLite(activityContext);
-            this.newsList = new ArrayList<>();
-        }
+        mDb = DatabaseRoom.getsInstance(mContext);
+        mType = type;
+        this.newsList = new ArrayList<>();
+        this.animationView = animationView;
     }
 
     public void setList(List<NewsArticle> newsArticles) {
+        Log.d(TAG, String.valueOf(newsArticles.size()));
         newsList = new ArrayList<>();
         this.newsList = newsArticles;
         notifyDataSetChanged();
@@ -85,42 +82,41 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .load(newsList.get(position).getUrlToImage())
                 .into(holder.imageView);
 
-        if (mType == 3) {
-            holder.imageButton.setImageResource(R.drawable.ic_favorite_black_18px);
-        } else if (mType == 2) {
-            holder.imageButton.setImageResource(R.drawable.ic_favorite_border_black_18px);
-        } else if (mType == 1) {
-            holder.imageButton.setVisibility(View.GONE);
-        }
+        holder.publishedAt.setText(UtilityMethods.getTimeAgo(newsList.get(position).getPublishedAt()));
+
+/*        switch (mType) {
+            case Constants.PINNED:
+                holder.imageButton.setImageResource(R.drawable.ic_favorite_black_18px);
+                break;
+            case Constants.UNREAD:
+                holder.imageButton.setImageResource(R.drawable.ic_favorite_border_black_18px);
+                break;
+            case Constants.SEARCH:
+                holder.imageButton.setVisibility(View.GONE);
+                break;
+        }*/
 
     }
 
     @Override
     public int getItemCount() {
-        if (newsList == null) {
-            return 0;
-        } else {
-            return newsList.size();
-        }
+        return newsList == null ? 0 : newsList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
-        TextView description;
-        TextView source;
-        //        TextView publishedAt;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView title, description, source, publishedAt;
         CardView cardView;
         ImageView imageView, imageButton;
         RelativeLayout favLayout;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.article_image);
             cardView = itemView.findViewById(R.id.news_card_view);
             title = itemView.findViewById(R.id.article_title);
             source = itemView.findViewById(R.id.article_source);
-//            publishedAt = itemView.findViewById(R.id.article_date);
-            imageButton = itemView.findViewById(R.id.favorite_button);
+            publishedAt = itemView.findViewById(R.id.article_date);
+//            imageButton = itemView.findViewById(R.id.favorite_button);
             favLayout = itemView.findViewById(R.id.fav_button_layout);
             description = itemView.findViewById(R.id.article_description);
             cardView.setOnClickListener(new View.OnClickListener() {
@@ -139,10 +135,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 }
             });
 
-            imageButton.setOnClickListener(new View.OnClickListener() {
+/*            imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mType == 2) {
+                    if (mType.equals(Constants.UNREAD)) {
                         AppExecutor.getInstance().diskIO().execute(new Runnable() {
                             @Override
                             public void run() {
@@ -184,7 +180,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                         });
                     }
                 }
-            });
+            });*/
         }
     }
 }

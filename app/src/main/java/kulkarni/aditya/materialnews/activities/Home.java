@@ -43,25 +43,19 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String ANONYMOUS = "anonymous";
-    private String mUsername;
-    private GoogleApiClient mGoogleApiClient;
     LottieAnimationView animationView;
     NavigationView navigationView;
     FloatingActionButton fab;
-    // Firebase instance variables
-    private FirebaseAuth mFirebaseAuth;
-    private FirebaseUser mFirebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        animationView = (LottieAnimationView) findViewById(R.id.animation_view);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        animationView = findViewById(R.id.animation_view);
+        navigationView = findViewById(R.id.nav_view);
+        fab = findViewById(R.id.fab);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         //Action Bar
@@ -79,14 +73,14 @@ public class Home extends AppCompatActivity
         window.setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         //Adding Tabs
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
 
         tabLayout.addTab(tabLayout.newTab().setText("Articles"));
         tabLayout.addTab(tabLayout.newTab().setText("Blogs"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pinned"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Pinned"));
 
         //Setting ViewPager
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPagerActivity);
+        final ViewPager viewPager = findViewById(R.id.viewPagerActivity);
         final CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
 
@@ -109,33 +103,13 @@ public class Home extends AppCompatActivity
             }
         });
 
-//        mUsername = ANONYMOUS;
-//
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, this)
-//                .addApi(Auth.GOOGLE_SIGN_IN_API)
-//                .addApi(AppInvite.API)
-//                .build();
-//
-//        // Initialize Firebase Auth
-//        mFirebaseAuth = FirebaseAuth.getInstance();
-//        mFirebaseUser = mFirebaseAuth.getCurrentUser();
-//        if (mFirebaseUser == null) {
-//            // Not signed in, launch the Sign In activity
-//            startActivity(new Intent(this, SignIn.class));
-//            finish();
-//            return;
-//        } else {
-//            mUsername = mFirebaseUser.getDisplayName();
-//        }
-
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +131,7 @@ public class Home extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -214,7 +188,7 @@ public class Home extends AppCompatActivity
             startActivity(sendIntent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {

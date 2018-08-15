@@ -51,12 +51,12 @@
             tools:text="Facebook has had some bumpy years. Critics, especially Rupert Murdoch and his News Corp CEO Robert Thomson, have no intention of letting the crisis go to waste." />
 
         <RelativeLayout
+            android:paddingBottom="8dp"
             android:id="@+id/fav_button_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/article_description"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal">
+            android:paddingTop="8dp">
 
             <TextView
                 android:layout_marginEnd="16dp"
@@ -75,24 +75,25 @@
                 android:textSize="10sp"
                 tools:text="Wired" />
 
-            <!--<TextView-->
-                <!--android:id="@+id/article_date"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:maxLines="1"-->
-                <!--android:textSize="12sp"-->
-                <!--tools:text="5 Mar" />-->
+            <TextView
+                android:id="@+id/article_date"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:maxLines="1"
+                android:gravity="center_vertical"
+                android:paddingEnd="4dp"
+                android:textSize="12sp"
+                tools:text="5 Mar" />
 
-            <ImageButton
+<!--            <ImageButton
                 android:contentDescription="favouriteButton"
                 android:id="@+id/favorite_button"
                 style="?android:attr/actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:minWidth="48dp" />
+                android:minWidth="48dp" />-->
 
         </RelativeLayout>
 

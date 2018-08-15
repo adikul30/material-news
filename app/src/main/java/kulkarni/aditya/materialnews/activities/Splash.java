@@ -16,13 +16,14 @@ import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Sources;
+import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 import kulkarni.aditya.materialnews.viewmodels.SourcesViewModel;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Splash extends AppCompatActivity {
 
-//    NewsSQLite newsSQLite;
     SourcesViewModel sourcesViewModel;
+    NewsViewModel newsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +31,8 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         sourcesViewModel = ViewModelProviders.of(this).get(SourcesViewModel.class);
+        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
 
-//        newsSQLite = new NewsSQLite(this);
         final SharedPreferences getPrefs = PreferenceManager
                 .getDefaultSharedPreferences(getBaseContext());
         final boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
@@ -44,7 +45,8 @@ public class Splash extends AppCompatActivity {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } finally {
-                        new NewsSQLite(Splash.this).dropAllTables();
+                        newsViewModel.truncateNews();
+                        sourcesViewModel.truncateSources();
                         //  Make a new preferences editor
                         SharedPreferences.Editor e = getPrefs.edit();
 

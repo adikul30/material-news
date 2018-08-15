@@ -22,18 +22,20 @@ public class Blog extends Fragment {
     RecyclerView recyclerView;
     BlogsAdapter blogsAdapter;
     ArrayList<Blogs> blogArrayList;
+    View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_blogs, container, false);
-        initBlogs();
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.blogs_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        blogsAdapter = new BlogsAdapter(blogArrayList,getActivity());
-        recyclerView.setAdapter(new ScaleInAnimationAdapter(blogsAdapter));
-        blogsAdapter.notifyDataSetChanged();
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_blogs, container, false);
+            initBlogs();
+            recyclerView = rootView.findViewById(R.id.blogs_recycler_view);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            blogsAdapter = new BlogsAdapter(blogArrayList, getActivity());
+            recyclerView.setAdapter(new ScaleInAnimationAdapter(blogsAdapter));
+            blogsAdapter.notifyDataSetChanged();
+        }
 
         return rootView;
     }

@@ -23,75 +23,50 @@ import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.NewsAdapter;
 import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.NewsArticle;
+import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 
 public class Pinned extends Fragment {
 
-//    NewsSQLite newsSQLite;
-    NewsAdapter unreadNewsAdapter;
+    NewsAdapter pinnedAdapter;
     RecyclerView recyclerView;
-//    SwipeRefreshLayout swipeRefreshLayout;
     TextView emptyState;
     NewsViewModel newsViewModel;
+    View rootView;
+    private final String TAG = this.getClass().getSimpleName();
 
     public Pinned() {
-        // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_pinned, container, false);
 
-//        newsSQLite = new NewsSQLite(getActivity());
-        recyclerView = rootView.findViewById(R.id.pinned_recycler_view);
-//        swipeRefreshLayout = rootView.findViewById(R.id.swipeRefresh);
-        emptyState = rootView.findViewById(R.id.emptyText);
+        if(rootView == null) {
+            rootView = inflater.inflate(R.layout.fragment_pinned, container, false);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        unreadNewsAdapter = new NewsAdapter(getActivity(), 3);
-        recyclerView.setAdapter(new ScaleInAnimationAdapter(unreadNewsAdapter));
-//        swipeRefreshLayout.setRefreshing(false);
+            recyclerView = rootView.findViewById(R.id.pinned_recycler_view);
+            emptyState = rootView.findViewById(R.id.emptyText);
 
-        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
-        newsViewModel.getAllPinned().observe(this, new Observer<List<NewsArticle>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsArticle> pinnedList) {
-                Log.d("Pinned", String.valueOf(pinnedList.size()));
-                unreadNewsAdapter.setList(pinnedList);
-            }
-        });
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            pinnedAdapter = new NewsAdapter(getActivity(), Constants.PINNED);
+            recyclerView.setAdapter(new ScaleInAnimationAdapter(pinnedAdapter));
+
+            newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
+            newsViewModel.getAllPinned().observe(this, new Observer<List<NewsArticle>>() {
+                @Override
+                public void onChanged(@Nullable List<NewsArticle> pinnedList) {
+                    Log.d(TAG, String.valueOf(pinnedList.size()));
+                    for (NewsArticle item : pinnedList) {
+                        Log.d(TAG, item.getTitle());
+                        Log.d(TAG, String.valueOf(item.getPinned()));
+                    }
+                    pinnedAdapter.setList(pinnedList);
+                }
+            });
+        }
 
         return rootView;
     }
-
-/*    public class getNewsFromDb extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-//            pinnedArrayList = newsSQLite.getPinnedRows();
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("MessageFragment", "onPostExecute messagesArrayList size=" + pinnedArrayList.size());
-            if (pinnedArrayList.size() == 0) {
-
-            } else {
-                unreadNewsAdapter = new NewsAdapter(getActivity(), 3, pinnedArrayList);
-                recyclerView.setAdapter(new ScaleInAnimationAdapter(unreadNewsAdapter));
-                unreadNewsAdapter.notifyDataSetChanged();
-//                swipeRefreshLayout.setRefreshing(false);
-            }
-        }
-    }*/
 }

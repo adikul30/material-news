@@ -8,16 +8,13 @@ import android.support.annotation.NonNull;
 /**
  * Created by maverick on 3/2/18.
  */
-@Entity(tableName = "sourceinfo")
+
 public class SourceInfo {
 
-    @PrimaryKey
-    @NonNull
     private String id;
 
     private String name;
 
-    @Ignore
     public SourceInfo() {
     }
 

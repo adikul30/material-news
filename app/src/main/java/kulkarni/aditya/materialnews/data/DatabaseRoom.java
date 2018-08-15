@@ -12,11 +12,11 @@ import kulkarni.aditya.materialnews.model.Sources;
 import kulkarni.aditya.materialnews.util.MyTypeConverter;
 
 
-@Database(entities = {NewsArticle.class, SourceInfo.class, Sources.class}, version = 1, exportSchema = false)
+@Database(entities = {NewsArticle.class, Sources.class}, version = 1, exportSchema = false)
 @TypeConverters({MyTypeConverter.class})
 public abstract class DatabaseRoom extends RoomDatabase {
 
-    private static final String LOG_TAG = DatabaseRoom.class.getSimpleName();
+    private static final String TAG = DatabaseRoom.class.getSimpleName();
     private static final Object LOCK = new Object();
     private static final String DATABASE_NAME = "news.db";
     private static DatabaseRoom sInstance;

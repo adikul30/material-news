@@ -13,6 +13,7 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.SourcesAdapter;
@@ -28,13 +29,11 @@ public class FilterSources extends AppCompatActivity {
 
     RecyclerView recyclerView;
     SourcesAdapter sourcesAdapter;
-    ArrayList<Sources> sourcesArrayList;
+    List<Sources> sourcesArrayList;
     NewsSQLite newsSQLite;
     DatabaseRoom mDb;
     SourcesViewModel sourcesViewModel;
     NewsViewModel newsViewModel;
-//    EditText searchQuery;
-//    TextView clear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,7 @@ public class FilterSources extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        recyclerView = (RecyclerView) findViewById(R.id.sources_recycler_view);
+        recyclerView = findViewById(R.id.sources_recycler_view);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -96,21 +95,18 @@ public class FilterSources extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        final ArrayList<Sources> sources = sourcesAdapter.getSelectedList();
+        final List<Sources> sources = sourcesAdapter.getSelectedList();
         final int count = sourcesAdapter.getSelectedSize();
 
         AppExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 if (count != 0) {
-//                    newsSQLite.dropSourcesTable();
-//                    newsSQLite.dropNewsTable();
                     sourcesViewModel.truncateSources();
                     newsViewModel.truncateNews();
                 }
                 for (int i = 0; i < sources.size(); i++) {
                     Log.v("selectedlist", sources.get(i).getSource());
-//                    newsSQLite.addSource(sources.get(i).getSource());
                     sourcesViewModel.insertSource(new Sources(sources.get(i).getSource(),true));
                 }
                 finishActivity();

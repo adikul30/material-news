@@ -19,10 +19,12 @@ import com.firebase.jobdispatcher.JobService;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.activities.Home;
-import kulkarni.aditya.materialnews.data.NewsSQLite;
+import kulkarni.aditya.materialnews.data.AppExecutor;
+import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.NewsResponse;
 import kulkarni.aditya.materialnews.model.Sources;
@@ -36,45 +38,42 @@ import static android.support.v4.app.NotificationCompat.VISIBILITY_PUBLIC;
  */
 
 public class BackgroundSyncJobService extends JobService {
-    private NewsSQLite newsSQLite;
-    private ArrayList<Sources> sourceArrayList;
-    private ArrayList<NewsArticle> newsArticleArrayList = new ArrayList<>();
+
+    private List<Sources> sourceArrayList;
+    private List<NewsArticle> newsArticleArrayList = new ArrayList<>();
+    private List<NewsArticle> tempList;
     StringBuilder sourcesString = new StringBuilder();
     private AsyncTask mGetSourcesTask;
-    private AsyncTask mGetTopNewsTask;
     public static final String PRIMARY_CHANNEL = "default";
     public static final String SOURCES = "sources";
     public static final String COUNTS = "counts";
+    private DatabaseRoom mDb;
     private FirebaseAnalytics mFirebaseAnalytics;
     Bundle bundle;
+    int currentCount;
+
     @Override
     public boolean onStartJob(JobParameters job) {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initNotification();
-        newsSQLite = new NewsSQLite(this);
-        mGetSourcesTask = new AsyncTask() {
+        mDb = DatabaseRoom.getsInstance(this);
 
+        AppExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
-            protected Object doInBackground(Object[] objects) {
+            public void run() {
                 sourceArrayList = new ArrayList<>();
-                sourceArrayList = newsSQLite.getAllSources();
+                sourceArrayList = mDb.sourcesDao().getSourcesList();
                 for (int i = 0; i < sourceArrayList.size(); i++) {
                     sourcesString.append(sourceArrayList.get(i).getSource());
                     sourcesString.append(",");
                 }
                 bundle = new Bundle();
-                bundle.putString("sources_string",sourcesString.toString());
+                bundle.putString("sources_string", sourcesString.toString());
                 mFirebaseAnalytics.logEvent(SOURCES, bundle);
-                return null;
+                fetchNews();
             }
+        });
 
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                networkCall();
-            }
-        };
-        mGetSourcesTask.execute();
         return true;
     }
 
@@ -98,13 +97,13 @@ public class BackgroundSyncJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters job) {
-        if (mGetSourcesTask != null) {
-            mGetSourcesTask.cancel(true);
-        }
+//        if (mGetSourcesTask != null) {
+//            mGetSourcesTask.cancel(true);
+//        }
         return true;
     }
 
-    private void networkCall() {
+    private void fetchNews() {
         APIClient apiClient = RetrofitInstance.getRetrofitInstance().create(APIClient.class);
 
         Call<NewsResponse> call = apiClient.getTopHeadlines(sourcesString.toString());
@@ -114,10 +113,20 @@ public class BackgroundSyncJobService extends JobService {
             public void onResponse(@NonNull Call<NewsResponse> call, @NonNull retrofit2.Response<NewsResponse> response) {
 
                 NewsResponse newsResponse = response.body();
+                tempList = new ArrayList<>();
+
                 if (newsResponse != null) {
-                    int previousCount = newsSQLite.getNewsCount();
-                    newsSQLite.addAllNews(newsResponse.getNewsArticleList());
-                    getUnread(previousCount);
+
+                    int previousCount = mDb.newsDao().getNewsCount();
+                    tempList = newsResponse.getNewsArticleList();
+
+                    if (tempList.size() != 0) {
+                        for (NewsArticle news : tempList) {
+                            mDb.newsDao().addNews(news);
+                        }
+                        currentCount = mDb.newsDao().getNewsCount();
+                        getUnread(previousCount);
+                    }
                 }
             }
 
@@ -129,38 +138,33 @@ public class BackgroundSyncJobService extends JobService {
     }
 
     private void getUnread(final int previousCount) {
-        int currentCount = newsSQLite.getNewsCount();
+
         final int difference = currentCount - previousCount;
         bundle = new Bundle();
         bundle.putString("currentCount", String.valueOf(currentCount));
         bundle.putString("previousCount", String.valueOf(previousCount));
         bundle.putString("difference", String.valueOf(difference));
-        mFirebaseAnalytics.logEvent(COUNTS,bundle);
+        mFirebaseAnalytics.logEvent(COUNTS, bundle);
+
         if (difference > 0) {
-            mGetTopNewsTask = new AsyncTask() {
 
+            AppExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
-                protected Object doInBackground(Object[] objects) {
+                public void run() {
                     newsArticleArrayList = new ArrayList<>();
-                    newsArticleArrayList = newsSQLite.getTopNRows(difference);
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Object o) {
-                    super.onPostExecute(o);
+                    newsArticleArrayList = mDb.newsDao().getTopNRows(difference);
                     sendNotification(difference);
                 }
-            };
-            mGetTopNewsTask.execute();
+            });
+
         }
     }
 
-    private void sendNotification(int count){
+    private void sendNotification(int count) {
         bundle = new Bundle();
         bundle.putString("notif_count", String.valueOf(count));
         bundle.putString("notif_list_size", String.valueOf(newsArticleArrayList.size()));
-        mFirebaseAnalytics.logEvent(COUNTS,bundle);
+        mFirebaseAnalytics.logEvent(COUNTS, bundle);
 
         //Notification setup
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
@@ -172,7 +176,7 @@ public class BackgroundSyncJobService extends JobService {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        for (int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             inboxStyle.addLine(newsArticleArrayList.get(i).getTitle());
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -184,7 +188,7 @@ public class BackgroundSyncJobService extends JobService {
         Intent activityFromNotification = new Intent(BackgroundSyncJobService.this, Home.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(BackgroundSyncJobService.this);
         stackBuilder.addNextIntentWithParentStack(activityFromNotification);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(notificationPendingIntent);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);

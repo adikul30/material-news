@@ -20,6 +20,7 @@
             </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
+            app:tabIndicatorColor="@color/White"
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -41,7 +42,6 @@
         android:layout_gravity="bottom|end"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@color/Cyan"
         app:srcCompat="@drawable/ic_filter" />
 
     <com.airbnb.lottie.LottieAnimationView

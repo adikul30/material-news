@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import kulkarni.aditya.materialnews.R;
@@ -22,15 +23,14 @@ import kulkarni.aditya.materialnews.model.Sources;
 
 public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHolder> {
 
-    private ArrayList<Sources> sourceList,sourceListCopy;
-    ArrayList<Sources> selectedList = new ArrayList<Sources>();
-    Context mContext;
+    private List<Sources> sourceList,sourceListCopy;
+    private List<Sources> selectedList = new ArrayList<Sources>();
+    private Context mContext;
 
-    public SourcesAdapter(ArrayList<Sources> sourceList, Context mContext) {
+    public SourcesAdapter(List<Sources> sourceList, Context mContext) {
         this.sourceList = sourceList;
         sourceListCopy = new ArrayList<>();
         sourceListCopy.addAll(sourceList);
-        Log.v("list", String.valueOf(sourceList));
         this.mContext = mContext;
     }
 
@@ -60,23 +60,19 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        if(sourceList == null){
-            return 0;
-        } else {
-            return sourceList.size();
-        }
+        return sourceList == null ? 0 : sourceList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView sourceText;
         CheckBox checkBox;
         LinearLayout checkboxLayout;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            sourceText = (TextView)itemView.findViewById(R.id.source);
-            checkBox = (CheckBox)itemView.findViewById(R.id.checkBox);
-            checkboxLayout = (LinearLayout)itemView.findViewById(R.id.checkboxLayout);
+            sourceText = itemView.findViewById(R.id.source);
+            checkBox = itemView.findViewById(R.id.checkBox);
+            checkboxLayout = itemView.findViewById(R.id.checkboxLayout);
         }
 
     }
@@ -85,7 +81,7 @@ public class SourcesAdapter extends RecyclerView.Adapter<SourcesAdapter.ViewHold
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public ArrayList<Sources> getSelectedList() {
+    public List<Sources> getSelectedList() {
         for(int i=0;i<sourceList.size();i++){
             if(sourceList.get(i).isSelected()){
                 selectedList.add(sourceList.get(i));

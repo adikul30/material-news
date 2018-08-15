@@ -24,6 +24,7 @@ import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.NewsResponse;
 import kulkarni.aditya.materialnews.network.APIClient;
 import kulkarni.aditya.materialnews.network.RetrofitInstance;
+import kulkarni.aditya.materialnews.util.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +52,7 @@ public class SearchResults extends AppCompatActivity {
         noMessagesLayout = findViewById(R.id.no_messages_error_layout);
         progressBar = findViewById(R.id.search_progress_bar);
         searchList = new ArrayList<>();
-        newsAdapter = new NewsAdapter(SearchResults.this, 1);
+        newsAdapter = new NewsAdapter(SearchResults.this, Constants.SEARCH);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new ScaleInAnimationAdapter(newsAdapter));
         handleIntent(getIntent());
@@ -84,12 +85,7 @@ public class SearchResults extends AppCompatActivity {
                     }
                     else{
                         noMessagesLayout.setVisibility(View.GONE);
-//                        newsAdapter = new NewsAdapter(SearchResults.this, 1);
-//                        recyclerView.setAdapter(new ScaleInAnimationAdapter(newsAdapter));
-//                        newsAdapter.notifyDataSetChanged();
                         newsAdapter.setList(searchList);
-                        // TODO: 8/15/18 setList
-
                         progressBar.setVisibility(View.GONE);
                     }
                 }

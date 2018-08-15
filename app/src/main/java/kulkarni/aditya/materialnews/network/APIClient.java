@@ -12,8 +12,6 @@ import retrofit2.http.Query;
 
 public interface APIClient {
 
-//    String apiKey = BuildConfig.ApiKey;
-
     @GET("top-headlines?pageSize=50&apiKey=" + BuildConfig.NEWS_API_KEY)
     Call<NewsResponse> getTopHeadlines(
             @Query("sources") String sources

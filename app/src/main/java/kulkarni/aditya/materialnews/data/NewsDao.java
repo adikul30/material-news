@@ -32,10 +32,10 @@ public interface NewsDao {
     @Query("SELECT * FROM newsarticles WHERE isPinned = 1 ORDER BY publishedAt DESC")
     LiveData<List<NewsArticle>> getPinned();
 
-    @Query("UPDATE newsarticles SET isPinned = 'false' WHERE title = :title")
+    @Query("UPDATE newsarticles SET isPinned = 1 WHERE title = :title")
     void pinArticle(String title);
 
-    @Query("UPDATE newsarticles SET isPinned = 'true' WHERE title = :title")
+    @Query("UPDATE newsarticles SET isPinned = 0 WHERE title = :title")
     void unpinArticle(String title);
 
 }
