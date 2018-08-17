@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,10 +51,12 @@ public class BackgroundSyncJobService extends JobService {
     private DatabaseRoom mDb;
     private FirebaseAnalytics mFirebaseAnalytics;
     Bundle bundle;
+    Context mContext;
     int currentCount;
 
     @Override
     public boolean onStartJob(JobParameters job) {
+        mContext = this;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initNotification();
         mDb = DatabaseRoom.getsInstance(this);
@@ -112,21 +115,25 @@ public class BackgroundSyncJobService extends JobService {
             @Override
             public void onResponse(@NonNull Call<NewsResponse> call, @NonNull retrofit2.Response<NewsResponse> response) {
 
-                NewsResponse newsResponse = response.body();
+                final NewsResponse newsResponse = response.body();
                 tempList = new ArrayList<>();
 
                 if (newsResponse != null) {
+                    AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            int previousCount = mDb.newsDao().getNewsCount();
+                            tempList = newsResponse.getNewsArticleList();
 
-                    int previousCount = mDb.newsDao().getNewsCount();
-                    tempList = newsResponse.getNewsArticleList();
-
-                    if (tempList.size() != 0) {
-                        for (NewsArticle news : tempList) {
-                            mDb.newsDao().addNews(news);
+                            if (tempList.size() != 0) {
+                                for (NewsArticle news : tempList) {
+                                    mDb.newsDao().addNews(news);
+                                }
+                                currentCount = mDb.newsDao().getNewsCount();
+                                getUnread(previousCount);
+                            }
                         }
-                        currentCount = mDb.newsDao().getNewsCount();
-                        getUnread(previousCount);
-                    }
+                    });
                 }
             }
 

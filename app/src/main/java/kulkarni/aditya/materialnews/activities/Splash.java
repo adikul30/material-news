@@ -1,6 +1,5 @@
 package kulkarni.aditya.materialnews.activities;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -9,12 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
-
 import kulkarni.aditya.materialnews.R;
-import kulkarni.aditya.materialnews.data.DatabaseRoom;
-import kulkarni.aditya.materialnews.data.NewsSQLite;
-import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Sources;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 import kulkarni.aditya.materialnews.viewmodels.SourcesViewModel;

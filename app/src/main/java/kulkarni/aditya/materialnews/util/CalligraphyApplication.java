@@ -31,7 +31,7 @@ public class CalligraphyApplication extends Application {
                 .build();
 
         // Initialize Fabric with the debug-disabled crashlytics.
-        Fabric.with(this, crashlyticsKit);
+        Fabric.with(this);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/ProductSans-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath)

@@ -17,6 +17,11 @@ public interface APIClient {
             @Query("sources") String sources
     );
 
+    @GET("top-headlines?pageSize=10&apiKey=" + BuildConfig.NEWS_API_KEY)
+    Call<NewsResponse> getHeadlinesByPage(
+            @Query("sources") String sources, @Query("page") int page
+    );
+
     @GET("everything?language=en&sortBy=popularity&pageSize=50&apiKey=" + BuildConfig.NEWS_API_KEY)
     Call<NewsResponse> searchAnything(
             @Query("q") String q

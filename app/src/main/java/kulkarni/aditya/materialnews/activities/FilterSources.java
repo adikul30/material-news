@@ -19,7 +19,6 @@ import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.SourcesAdapter;
 import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
-import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.Sources;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 import kulkarni.aditya.materialnews.viewmodels.SourcesViewModel;
@@ -30,7 +29,6 @@ public class FilterSources extends AppCompatActivity {
     RecyclerView recyclerView;
     SourcesAdapter sourcesAdapter;
     List<Sources> sourcesArrayList;
-    NewsSQLite newsSQLite;
     DatabaseRoom mDb;
     SourcesViewModel sourcesViewModel;
     NewsViewModel newsViewModel;
@@ -40,7 +38,6 @@ public class FilterSources extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter_sources);
         setTitle("Select Sources");
-        newsSQLite = new NewsSQLite(this);
         mDb = DatabaseRoom.getsInstance(this);
 
         sourcesViewModel = ViewModelProviders.of(this).get(SourcesViewModel.class);

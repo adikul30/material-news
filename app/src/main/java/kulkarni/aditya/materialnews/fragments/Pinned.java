@@ -2,11 +2,9 @@ package kulkarni.aditya.materialnews.fragments;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.NewsAdapter;
-import kulkarni.aditya.materialnews.data.NewsSQLite;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
