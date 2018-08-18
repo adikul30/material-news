@@ -9,7 +9,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Pinned;
 
 @Dao

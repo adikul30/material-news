@@ -1,10 +1,5 @@
 package kulkarni.aditya.materialnews.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
 /**
  * Created by maverick on 3/2/18.
  */

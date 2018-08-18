@@ -9,7 +9,6 @@ import java.util.List;
 
 import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
-import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Sources;
 
 public class SourcesViewModel extends AndroidViewModel {

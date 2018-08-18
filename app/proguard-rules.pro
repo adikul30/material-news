@@ -32,7 +32,7 @@
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
 -dontwarn okio.**
-
+-dontnote android.arch.lifecycle.*
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
 -dontwarn javax.annotation.**
@@ -43,3 +43,8 @@
   **[] $VALUES;
   public *;
 }
+-dontwarn com.squareup.okhttp.**
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+-dontwarn android.arch.util.paging.CountedDataSource
+-dontwarn android.arch.persistence.room.paging.LimitOffsetDataSource

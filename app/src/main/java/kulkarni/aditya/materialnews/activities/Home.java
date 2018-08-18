@@ -27,12 +27,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import es.dmoral.toasty.Toasty;
 import kulkarni.aditya.materialnews.R;

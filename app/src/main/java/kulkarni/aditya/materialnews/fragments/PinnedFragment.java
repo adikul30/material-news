@@ -18,7 +18,6 @@ import java.util.List;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.PinnedAdapter;
-import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Pinned;
 import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;

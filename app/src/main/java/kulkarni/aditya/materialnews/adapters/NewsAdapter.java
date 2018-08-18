@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,6 @@ import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Pinned;
 import kulkarni.aditya.materialnews.util.Constants;
-import kulkarni.aditya.materialnews.util.UtilityMethods;
 
 /**
  * Created by adicool on 21/5/17.

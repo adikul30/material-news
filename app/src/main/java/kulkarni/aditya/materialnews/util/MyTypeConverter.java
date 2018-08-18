@@ -6,9 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.List;
-
-import javax.xml.transform.Source;
 
 import kulkarni.aditya.materialnews.model.SourceInfo;
 

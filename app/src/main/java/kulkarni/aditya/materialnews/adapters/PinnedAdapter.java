@@ -1,6 +1,5 @@
 package kulkarni.aditya.materialnews.adapters;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -27,7 +25,6 @@ import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.Pinned;
 import kulkarni.aditya.materialnews.util.Constants;
-import kulkarni.aditya.materialnews.util.UtilityMethods;
 
 public class PinnedAdapter extends RecyclerView.Adapter<PinnedAdapter.ViewHolder> {
 

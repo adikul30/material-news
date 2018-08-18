@@ -8,7 +8,6 @@ import android.content.Context;
 
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Pinned;
-import kulkarni.aditya.materialnews.model.SourceInfo;
 import kulkarni.aditya.materialnews.model.Sources;
 import kulkarni.aditya.materialnews.util.MyTypeConverter;
 
