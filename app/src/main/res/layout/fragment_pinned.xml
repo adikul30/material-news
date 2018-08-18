@@ -3,15 +3,17 @@
     android:background="@color/cream_background"
     android:layout_height="wrap_content">
 
-<!--    <TextView
+    <TextView
+        android:visibility="gone"
         android:textStyle="italic"
-        android:id="@+id/swipe_to_refresh_text"
+        android:id="@+id/empty_text"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:paddingTop="5dp"
-        android:text="Swipe down to refresh"
-        android:textColor="@color/grey_600"/>-->
+        android:text="Press the ❤️ on any article to pin it"
+        android:textColor="@color/grey_600"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:layout_alignParentTop="true"
@@ -26,16 +28,5 @@
         android:id="@+id/pinned_recycler_view" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <TextView
-        android:id="@+id/emptyText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="You don't have any pinned items yet !"
-        android:textColor="@color/grey_700"
-        android:textSize="20sp"
-        android:visibility="gone" />
 
 </RelativeLayout>

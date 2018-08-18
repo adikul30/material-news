@@ -44,7 +44,7 @@ import kulkarni.aditya.materialnews.viewmodels.SourcesViewModel;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class Unread extends Fragment {
+public class UnreadFragment extends Fragment {
 
     String TAG = getClass().getSimpleName();
 
@@ -65,7 +65,7 @@ public class Unread extends Fragment {
     NewsViewModel newsViewModel;
     SourcesViewModel sourcesViewModel;
 
-    public Unread() {
+    public UnreadFragment() {
 
     }
 

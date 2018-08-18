@@ -17,21 +17,22 @@ import java.util.List;
 
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import kulkarni.aditya.materialnews.R;
-import kulkarni.aditya.materialnews.adapters.NewsAdapter;
+import kulkarni.aditya.materialnews.adapters.PinnedAdapter;
 import kulkarni.aditya.materialnews.model.NewsArticle;
+import kulkarni.aditya.materialnews.model.Pinned;
 import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 
-public class Pinned extends Fragment {
+public class PinnedFragment extends Fragment {
 
-    NewsAdapter pinnedAdapter;
+    PinnedAdapter pinnedAdapter;
     RecyclerView recyclerView;
     TextView emptyState;
     NewsViewModel newsViewModel;
     View rootView;
     private final String TAG = this.getClass().getSimpleName();
 
-    public Pinned() {
+    public PinnedFragment() {
 
     }
 
@@ -43,22 +44,26 @@ public class Pinned extends Fragment {
             rootView = inflater.inflate(R.layout.fragment_pinned, container, false);
 
             recyclerView = rootView.findViewById(R.id.pinned_recycler_view);
-            emptyState = rootView.findViewById(R.id.emptyText);
+            emptyState = rootView.findViewById(R.id.empty_text);
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            pinnedAdapter = new NewsAdapter(getActivity(), Constants.PINNED);
+            pinnedAdapter = new PinnedAdapter(getActivity(), Constants.PINNED);
             recyclerView.setAdapter(new ScaleInAnimationAdapter(pinnedAdapter));
 
             newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
-            newsViewModel.getAllPinned().observe(this, new Observer<List<NewsArticle>>() {
+            newsViewModel.getAllPinned().observe(this, new Observer<List<Pinned>>() {
                 @Override
-                public void onChanged(@Nullable List<NewsArticle> pinnedList) {
+                public void onChanged(@Nullable List<Pinned> pinnedList) {
                     Log.d(TAG, String.valueOf(pinnedList.size()));
-                    for (NewsArticle item : pinnedList) {
-                        Log.d(TAG, item.getTitle());
-                        Log.d(TAG, String.valueOf(item.getPinned()));
+                    if(pinnedList.size() == 0){
+                        recyclerView.setVisibility(View.GONE);
+                        emptyState.setVisibility(View.VISIBLE);
                     }
-                    pinnedAdapter.setList(pinnedList);
+                    else {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        emptyState.setVisibility(View.GONE);
+                        pinnedAdapter.setList(pinnedList);
+                    }
                 }
             });
         }

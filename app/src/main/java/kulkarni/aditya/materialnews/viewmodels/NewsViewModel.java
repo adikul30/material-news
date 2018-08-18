@@ -10,6 +10,7 @@ import java.util.List;
 import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
+import kulkarni.aditya.materialnews.model.Pinned;
 
 public class NewsViewModel extends AndroidViewModel {
 
@@ -43,7 +44,7 @@ public class NewsViewModel extends AndroidViewModel {
         });
     }
 
-    public LiveData<List<NewsArticle>> getAllPinned() {
-        return mDb.newsDao().getPinned();
+    public LiveData<List<Pinned>> getAllPinned() {
+        return mDb.pinnedDao().getPinned();
     }
 }

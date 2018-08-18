@@ -17,7 +17,7 @@ import kulkarni.aditya.materialnews.adapters.BlogsAdapter;
 import kulkarni.aditya.materialnews.model.Blogs;
 
 
-public class Blog extends Fragment {
+public class BlogFragment extends Fragment {
 
     RecyclerView recyclerView;
     BlogsAdapter blogsAdapter;
@@ -73,7 +73,7 @@ public class Blog extends Fragment {
         blogArrayList.add(new Blogs("Uber","http://eng.uber.com/"));
         blogArrayList.add(new Blogs("GitHub","https://blog.github.com/"));
         blogArrayList.add(new Blogs("Google Design","https://design.google/"));
-        blogArrayList.add(new Blogs("OpenAI Blog","https://blog.openai.com/"));
+        blogArrayList.add(new Blogs("OpenAI BlogFragment","https://blog.openai.com/"));
 
         Collections.sort(blogArrayList,Blogs.comparator);
 

@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import kulkarni.aditya.materialnews.fragments.Blog;
-import kulkarni.aditya.materialnews.fragments.Pinned;
-import kulkarni.aditya.materialnews.fragments.Unread;
+import kulkarni.aditya.materialnews.fragments.BlogFragment;
+import kulkarni.aditya.materialnews.fragments.PinnedFragment;
+import kulkarni.aditya.materialnews.fragments.UnreadFragment;
 
 /**
  * Created by adicool on 28/5/17.
@@ -24,9 +24,9 @@ public class CustomPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position){
-            case 0 : return new Unread();
-            case 1 : return new Blog();
-//            case 2 : return new Pinned();
+            case 0 : return new UnreadFragment();
+            case 1 : return new BlogFragment();
+            case 2 : return new PinnedFragment();
 
             default: return null;
         }

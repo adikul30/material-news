@@ -77,7 +77,7 @@ public class Home extends AppCompatActivity
 
         tabLayout.addTab(tabLayout.newTab().setText("Articles"));
         tabLayout.addTab(tabLayout.newTab().setText("Blogs"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Pinned"));
+        tabLayout.addTab(tabLayout.newTab().setText("Pinned"));
 
         //Setting ViewPager
         final ViewPager viewPager = findViewById(R.id.viewPagerActivity);

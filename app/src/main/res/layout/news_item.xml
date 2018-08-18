@@ -75,7 +75,7 @@
                 android:textSize="10sp"
                 tools:text="Wired" />
 
-            <TextView
+<!--            <TextView
                 android:id="@+id/article_date"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
@@ -84,16 +84,16 @@
                 android:gravity="center_vertical"
                 android:paddingEnd="4dp"
                 android:textSize="12sp"
-                tools:text="5 Mar" />
+                tools:text="5 Mar" />-->
 
-<!--            <ImageButton
+            <ImageButton
                 android:contentDescription="favouriteButton"
                 android:id="@+id/favorite_button"
                 style="?android:attr/actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:minWidth="48dp" />-->
+                android:minWidth="48dp" />
 
         </RelativeLayout>
 

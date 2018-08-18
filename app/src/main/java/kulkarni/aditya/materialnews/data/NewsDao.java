@@ -29,13 +29,13 @@ public interface NewsDao {
     @Query("DELETE FROM newsarticles")
     void truncateNews();
 
-    @Query("SELECT * FROM newsarticles WHERE isPinned = 1 ORDER BY publishedAt DESC")
+/*    @Query("SELECT * FROM newsarticles WHERE isPinned = 1 ORDER BY publishedAt DESC")
     LiveData<List<NewsArticle>> getPinned();
 
     @Query("UPDATE newsarticles SET isPinned = 1 WHERE title = :title")
     void pinArticle(String title);
 
     @Query("UPDATE newsarticles SET isPinned = 0 WHERE title = :title")
-    void unpinArticle(String title);
+    void unpinArticle(String title);*/
 
 }

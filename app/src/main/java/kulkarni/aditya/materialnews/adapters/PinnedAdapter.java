@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,43 +25,29 @@ import java.util.List;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.data.AppExecutor;
 import kulkarni.aditya.materialnews.data.DatabaseRoom;
-import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.Pinned;
 import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.util.UtilityMethods;
 
-/**
- * Created by adicool on 21/5/17.
- */
+public class PinnedAdapter extends RecyclerView.Adapter<PinnedAdapter.ViewHolder> {
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-
-    private final String TAG = this.getClass().getSimpleName();
-    private List<NewsArticle> newsList;
+    private List<Pinned> pinnedList;
     private Context mContext;
     private String mType;
     private DatabaseRoom mDb;
-    private LottieAnimationView animationView;
+    private final String TAG = this.getClass().getSimpleName();
 
-    public NewsAdapter(Context activityContext, String type) {
+    public PinnedAdapter(Context activityContext, String type) {
         mContext = activityContext;
         mDb = DatabaseRoom.getsInstance(mContext);
         mType = type;
-        this.newsList = new ArrayList<>();
+        this.pinnedList = new ArrayList<>();
     }
 
-    public NewsAdapter(Context activityContext, String type, LottieAnimationView animationView) {
-        mContext = activityContext;
-        mDb = DatabaseRoom.getsInstance(mContext);
-        mType = type;
-        this.newsList = new ArrayList<>();
-        this.animationView = animationView;
-    }
-
-    public void setList(List<NewsArticle> newsArticles) {
-        Log.d(TAG, String.valueOf(newsArticles.size()));
-        newsList = new ArrayList<>();
-        this.newsList = newsArticles;
+    public void setList(List<Pinned> Pinneds) {
+        Log.d(TAG, String.valueOf(Pinneds.size()));
+        pinnedList = new ArrayList<>();
+        this.pinnedList = Pinneds;
         notifyDataSetChanged();
     }
 
@@ -76,15 +61,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.title.setText(newsList.get(position).getTitle());
-        holder.source.setText(newsList.get(position).getSourceInfo().getName());
-        holder.description.setText(newsList.get(position).getDescription());
+        holder.title.setText(pinnedList.get(position).getTitle());
+        holder.source.setText(pinnedList.get(position).getSourceInfo().getName());
+        holder.description.setText(pinnedList.get(position).getDescription());
 
         Glide.with(mContext.getApplicationContext())
-                .load(newsList.get(position).getUrlToImage())
+                .load(pinnedList.get(position).getUrlToImage())
                 .into(holder.imageView);
 
-//        holder.publishedAt.setText(UtilityMethods.getTimeAgo(newsList.get(position).getPublishedAt()));
+//        holder.publishedAt.setText(UtilityMethods.getTimeAgo(pinnedList.get(position).getPublishedAt()));
 
         switch (mType) {
             case Constants.PINNED:
@@ -102,7 +87,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return newsList == null ? 0 : newsList.size();
+        return pinnedList == null ? 0 : pinnedList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -125,7 +110,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String url = newsList.get(getAdapterPosition()).getUrl();
+                    String url = pinnedList.get(getAdapterPosition()).getUrl();
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                     builder.addDefaultShareMenuItem();
                     builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.getResources(),
@@ -141,48 +126,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mType.equals(Constants.UNREAD)) {
-                        AppExecutor.getInstance().diskIO().execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                NewsArticle model = newsList.get(getAdapterPosition());
-                                mDb.pinnedDao().addPinned(
-                                        new Pinned(model.getAuthor(),
-                                                model.getTitle(),
-                                                model.getDescription(),
-                                                model.getUrl(),
-                                                model.getUrlToImage(),
-                                                model.getPublishedAt(),
-                                                model.getSourceInfo()));
-                            }
-                        });
-                        animationView.setVisibility(View.VISIBLE);
-                        animationView.setAnimation("TwitterHeart.json");
-                        animationView.loop(false);
-                        animationView.playAnimation();
-                        animationView.addAnimatorListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animation) {
 
-                            }
+                    AppExecutor.getInstance().diskIO().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                                mDb.pinnedDao().deletePinned(pinnedList.get(getAdapterPosition()));
+                        }
+                    });
 
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                                animationView.cancelAnimation();
-                                animationView.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animation) {
-
-                            }
-                        });
-                    }
                 }
             });
         }
