@@ -15,18 +15,10 @@
         android:text="Press the ❤️ on any article to pin it"
         android:textColor="@color/grey_600"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_alignParentTop="true"
-        android:id="@+id/swipeRefresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/pinned_recycler_view" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

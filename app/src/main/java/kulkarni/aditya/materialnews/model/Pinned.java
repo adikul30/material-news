@@ -24,6 +24,7 @@ public class Pinned {
 
     private String publishedAt;
 
+    private long pinnedAt;
     @SerializedName("source")
     private SourceInfo sourceInfo;
 
@@ -32,7 +33,18 @@ public class Pinned {
 
     }
 
-    public Pinned(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
+    public Pinned(@NonNull String title, String description, String author, String url, String urlToImage, String publishedAt, long pinnedAt, SourceInfo sourceInfo) {
+        this.title = title;
+        this.description = description;
+        this.author = author;
+        this.url = url;
+        this.urlToImage = urlToImage;
+        this.publishedAt = publishedAt;
+        this.pinnedAt = pinnedAt;
+        this.sourceInfo = sourceInfo;
+    }
+
+/*    public Pinned(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
         this.author = author;
         this.title = title;
         this.description = description;
@@ -40,6 +52,14 @@ public class Pinned {
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
         this.sourceInfo = sourceInfo;
+    }*/
+
+    public long getPinnedAt() {
+        return pinnedAt;
+    }
+
+    public void setPinnedAt(long pinnedAt) {
+        this.pinnedAt = pinnedAt;
     }
 
     public String getAuthor() {

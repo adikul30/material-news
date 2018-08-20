@@ -19,6 +19,6 @@ public interface PinnedDao {
     @Delete
     void deletePinned(Pinned pinned);
 
-    @Query("SELECT * FROM pinned  ORDER BY publishedAt DESC")
+    @Query("SELECT * FROM pinned  ORDER BY pinnedAt DESC")
     LiveData<List<Pinned>> getPinned();
 }

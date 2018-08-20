@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ScheduleServiceHelper {
 
-    private static final int SYNC_INTERVAL_MINUTES = 60;
+    private static final int SYNC_INTERVAL_MINUTES = 120;
     private static final int SYNC_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(SYNC_INTERVAL_MINUTES));
     private static final int SYNC_FLEXTIME_MINUTES = 10;
     private static final int SYNC_FLEXTIME_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(SYNC_FLEXTIME_MINUTES));

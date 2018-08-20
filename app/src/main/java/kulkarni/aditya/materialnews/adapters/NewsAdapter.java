@@ -151,6 +151,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                                                 model.getUrl(),
                                                 model.getUrlToImage(),
                                                 model.getPublishedAt(),
+                                                System.currentTimeMillis(),
                                                 model.getSourceInfo()));
                             }
                         });
