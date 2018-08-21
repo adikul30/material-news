@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.Splash"
+            android:name=".ui.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.Home"
+            android:name=".ui.HomeActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
@@ -36,16 +36,16 @@
             android:value="55514a1d8516ae87d2b3ebf2e9c55b6085570edd" />
 
         <activity
-            android:name=".activities.FilterSources"
-            android:parentActivityName=".activities.Home"
+            android:name=".ui.FilterSourcesActivity"
+            android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.About"
-            android:parentActivityName=".activities.Home"
+            android:name=".ui.AboutActivity"
+            android:parentActivityName=".ui.HomeActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name=".network.FCMInstanceIDService">
+        <service android:name=".services.FCMInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -60,11 +60,11 @@
             android:resource="@color/blue_500" />
 
         <activity
-            android:name=".activities.SearchResults"
+            android:name=".ui.SearchResults"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
-            android:parentActivityName=".activities.Home">
+            android:parentActivityName=".ui.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -75,7 +75,7 @@
         </activity>
 
         <service
-            android:name=".network.BackgroundSyncJobService"
+            android:name=".services.BackgroundSyncJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>

@@ -40,7 +40,7 @@ captures/
 .idea/dictionaries
 .idea/libraries
 .idea
-
+.DS_Store
 # Keystore files
 *.jks
 

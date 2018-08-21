@@ -8,6 +8,11 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
+/**
+ * Unused class to serialize / deserialize nested JSON objects. Using TypeConverters instead.
+ * @param <T>
+ */
+
 public class MyDeserializer<T> implements JsonDeserializer<T> {
     @Override
     public T deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {

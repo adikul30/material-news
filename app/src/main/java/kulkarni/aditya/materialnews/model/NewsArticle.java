@@ -18,20 +18,9 @@ public class NewsArticle {
     @NonNull
     private String title;
 
-    private String description;
-
-    private String author;
-
-    private String url;
-
-    private String urlToImage;
-
-    private String publishedAt;
-
-//    private boolean isPinned;
+    private String description, author,url,urlToImage,publishedAt;
 
     @SerializedName("source")
-//    @Expose
     private SourceInfo sourceInfo;
 
     @Ignore
@@ -106,11 +95,4 @@ public class NewsArticle {
         this.sourceInfo = sourceInfo;
     }
 
-//    public Boolean getPinned() {
-//        return isPinned;
-//    }
-//
-//    public void setPinned(Boolean pinned) {
-//        isPinned = pinned;
-//    }
 }

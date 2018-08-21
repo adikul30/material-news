@@ -1,0 +1,45 @@
+package kulkarni.aditya.materialnews.ui;
+
+import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
+
+import java.util.List;
+
+import kulkarni.aditya.materialnews.db.DatabaseRoom;
+import kulkarni.aditya.materialnews.model.Sources;
+import kulkarni.aditya.materialnews.util.AppExecutor;
+
+public class SourcesViewModel extends AndroidViewModel {
+    private LiveData<List<Sources>> sourceList;
+    private DatabaseRoom mDb;
+
+    public SourcesViewModel(@NonNull Application application) {
+        super(application);
+        mDb = DatabaseRoom.getsInstance(this.getApplication());
+        sourceList = mDb.sourcesDao().getSources();
+    }
+
+    public LiveData<List<Sources>> getAllSources() {
+        return sourceList;
+    }
+
+    public void insertSource(final Sources source){
+        AppExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.sourcesDao().addSource(source);
+            }
+        });
+    }
+
+    public void truncateSources() {
+        AppExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.sourcesDao().truncateSources();
+            }
+        });
+    }
+}

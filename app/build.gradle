@@ -9,6 +9,7 @@
     }
 }*/
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 /*repositories {
@@ -48,6 +49,10 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -70,9 +75,9 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    implementation 'com.google.firebase:firebase-auth:16.0.3'
     implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.1.0'
+    implementation 'com.google.firebase:firebase-messaging:17.3.0'
     implementation 'com.google.firebase:firebase-invites:16.0.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
     implementation 'com.google.android.gms:play-services-auth:16.0.0'
@@ -102,5 +107,10 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:2.2.6'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 }
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}
