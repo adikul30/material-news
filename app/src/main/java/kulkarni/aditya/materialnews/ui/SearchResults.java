@@ -47,7 +47,7 @@ public class SearchResults extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        recyclerView =  findViewById(R.id.search_recycler_view);
+        recyclerView = findViewById(R.id.search_recycler_view);
         noMessagesLayout = findViewById(R.id.no_messages_error_layout);
         progressBar = findViewById(R.id.search_progress_bar);
         searchList = new ArrayList<>();
@@ -77,12 +77,11 @@ public class SearchResults extends AppCompatActivity {
                     searchList = new ArrayList<>();
                     NewsResponse newsResponse = response.body();
                     searchList.addAll(newsResponse.getNewsArticleList());
-                    Log.d(TAG,searchList.toString());
-                    if(searchList == null || searchList.size() == 0){
+                    Log.d(TAG, searchList.toString());
+                    if (searchList == null || searchList.size() == 0) {
                         progressBar.setVisibility(View.GONE);
                         noMessagesLayout.setVisibility(View.VISIBLE);
-                    }
-                    else{
+                    } else {
                         noMessagesLayout.setVisibility(View.GONE);
                         newsAdapter.setList(searchList);
                         progressBar.setVisibility(View.GONE);
@@ -91,7 +90,7 @@ public class SearchResults extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<NewsResponse> call, Throwable t) {
-                    Log.d("failure", t.toString()+"");
+                    Log.d("failure", t.toString() + "");
                 }
             });
         }

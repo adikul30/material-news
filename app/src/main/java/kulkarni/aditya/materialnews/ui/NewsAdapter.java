@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -85,7 +87,7 @@ public class NewsAdapter extends PagedListAdapter<NewsArticle,NewsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item, parent, false);
+        View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.news_item_constraint, parent, false);
         return new ViewHolder(rootView);
     }
 
@@ -123,22 +125,23 @@ public class NewsAdapter extends PagedListAdapter<NewsArticle,NewsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, source, publishedAt;
-        CardView cardView;
+        ConstraintLayout rootLayout;
         ImageView imageView;
-        ImageButton imageButton;
+        ImageButton imageButton, shareButton;
         RelativeLayout favLayout;
 
         ViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.article_image);
-            cardView = itemView.findViewById(R.id.news_card_view);
+            rootLayout = itemView.findViewById(R.id.root_layout);
             title = itemView.findViewById(R.id.article_title);
             source = itemView.findViewById(R.id.article_source);
 //            publishedAt = itemView.findViewById(R.id.article_date);
             imageButton = itemView.findViewById(R.id.favorite_button);
-            favLayout = itemView.findViewById(R.id.fav_button_layout);
+            shareButton = itemView.findViewById(R.id.share_button);
+//            favLayout = itemView.findViewById(R.id.fav_button_layout);
             description = itemView.findViewById(R.id.article_description);
-            cardView.setOnClickListener(new View.OnClickListener() {
+            rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String url = getItem(getAdapterPosition()).getUrl();
@@ -200,6 +203,13 @@ public class NewsAdapter extends PagedListAdapter<NewsArticle,NewsAdapter.ViewHo
                             }
                         });
                     }
+                }
+            });
+
+            shareButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext,"hahaha",Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -7,10 +7,13 @@ Libraries used : <br>
 2. [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)<br>
 3. [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)<br>
 4. [Retrofit](https://square.github.io/retrofit)<br>
+5. [ConstraintLayout](https://developer.android.com/training/constraint-layout/)<br>
+5. [Paging](https://developer.android.com/topic/libraries/architecture/paging/)<br>
 
 To do :
 
-- [ ] [Paging](https://developer.android.com/topic/libraries/architecture/paging)
+- [x] [Paging](https://developer.android.com/topic/libraries/architecture/paging)
+- [x] [ConstraintLayout](https://developer.android.com/training/constraint-layout)
+- [ ] [Data Binding](https://developer.android.com/topic/libraries/data-binding)
 
 API provided by : [newsapi](https://newsapi.org)
-
