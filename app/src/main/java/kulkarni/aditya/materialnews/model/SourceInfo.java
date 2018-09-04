@@ -1,13 +1,17 @@
 package kulkarni.aditya.materialnews.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by maverick on 3/2/18.
  */
 
 public class SourceInfo {
 
+    @SerializedName("id")
     private String id;
 
+    @SerializedName("name")
     private String name;
 
     public SourceInfo() {

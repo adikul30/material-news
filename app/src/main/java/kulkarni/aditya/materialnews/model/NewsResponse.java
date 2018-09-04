@@ -10,8 +10,10 @@ import java.util.List;
 
 public class NewsResponse {
 
+    @SerializedName("status")
     private String status;
 
+    @SerializedName("totalResults")
     private int totalResults;
 
     @SerializedName("articles")

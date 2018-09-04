@@ -12,16 +12,22 @@ public class Pinned {
 
     @PrimaryKey
     @NonNull
+    @SerializedName("title")
     private String title;
 
+    @SerializedName("description")
     private String description;
 
+    @SerializedName("author")
     private String author;
 
+    @SerializedName("url")
     private String url;
 
+    @SerializedName("urlToImage")
     private String urlToImage;
 
+    @SerializedName("publishedAt")
     private String publishedAt;
 
     private long pinnedAt;

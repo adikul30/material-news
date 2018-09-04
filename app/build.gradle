@@ -25,22 +25,23 @@ android {
         targetSdkVersion 27
         versionCode 3
         versionName "1.2"
+        resConfigs "en"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
 //            buildConfigField ('String', "ApiKey", apiKey)
             buildConfigField("String", "NEWS_API_KEY", NEWS_API_KEY)
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
 //            buildConfigField ('String', "ApiKey", apiKey)
 //            ext.enableCrashlytics = false
             buildConfigField("String", "NEWS_API_KEY", NEWS_API_KEY)
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -48,6 +49,7 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+
 }
 
 dependencies {
