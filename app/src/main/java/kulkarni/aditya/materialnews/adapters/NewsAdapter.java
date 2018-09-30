@@ -145,9 +145,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                             public void run() {
                                 NewsArticle model = newsList.get(getAdapterPosition());
                                 mDb.pinnedDao().addPinned(
-                                        new Pinned(model.getAuthor(),
-                                                model.getTitle(),
+                                        new Pinned(model.getTitle(),
                                                 model.getDescription(),
+                                                model.getAuthor(),
                                                 model.getUrl(),
                                                 model.getUrlToImage(),
                                                 model.getPublishedAt(),

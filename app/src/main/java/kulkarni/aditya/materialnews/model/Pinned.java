@@ -30,7 +30,9 @@ public class Pinned {
     @SerializedName("publishedAt")
     private String publishedAt;
 
+    @SerializedName("pinnedAt")
     private long pinnedAt;
+
     @SerializedName("source")
     private SourceInfo sourceInfo;
 
