@@ -1,9 +1,9 @@
 package kulkarni.aditya.materialnews.model;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -52,7 +52,7 @@ public class Pinned {
         this.sourceInfo = sourceInfo;
     }
 
-/*    public Pinned(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
+    /*    public Pinned(String author, @NonNull String title, String description, String url, String urlToImage, String publishedAt, SourceInfo sourceInfo) {
         this.author = author;
         this.title = title;
         this.description = description;

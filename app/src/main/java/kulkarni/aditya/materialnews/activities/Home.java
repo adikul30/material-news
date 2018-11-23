@@ -1,23 +1,28 @@
 package kulkarni.aditya.materialnews.activities;
 
 import android.app.SearchManager;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -28,10 +33,13 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import es.dmoral.toasty.Toasty;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.CustomPagerAdapter;
+import kulkarni.aditya.materialnews.fragments.BlogFragment;
+import kulkarni.aditya.materialnews.fragments.PinnedFragment;
+import kulkarni.aditya.materialnews.fragments.UnreadFragment;
 import kulkarni.aditya.materialnews.network.ScheduleServiceHelper;
+import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Home extends AppCompatActivity
@@ -40,14 +48,21 @@ public class Home extends AppCompatActivity
     LottieAnimationView animationView;
     NavigationView navigationView;
     FloatingActionButton fab;
+    NewsViewModel newsViewModel;
+    ViewPager viewPager;
+    CoordinatorLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        animationView = findViewById(R.id.animation_view);
+        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
+
+
+//        animationView = findViewById(R.id.animation_view);
         navigationView = findViewById(R.id.nav_view);
+        rootLayout = findViewById(R.id.root_layout);
         fab = findViewById(R.id.fab);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,36 +81,16 @@ public class Home extends AppCompatActivity
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         window.setNavigationBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
-        //Adding Tabs
         TabLayout tabLayout = findViewById(R.id.tabLayout);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Articles"));
-        tabLayout.addTab(tabLayout.newTab().setText("Blogs"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pinned"));
-
-        //Setting ViewPager
-        final ViewPager viewPager = findViewById(R.id.viewPagerActivity);
-        final CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager = findViewById(R.id.viewPagerActivity);
+        final CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(new UnreadFragment(),"Articles");
+        pagerAdapter.addFragment(new BlogFragment(),"Blogs");
+        pagerAdapter.addFragment(new PinnedFragment(),"Pinned");
         viewPager.setAdapter(pagerAdapter);
-
+        tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(0, true);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition(), true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -109,18 +104,37 @@ public class Home extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Home.this, FilterSources.class));
+                Home.this.startActivity(new Intent(Home.this, FilterSources.class));
             }
         });
 
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if(Intent.ACTION_SEND.equals(action) && type != null){
+            if ("text/plain".equals(type)) {
+                handleFavouriteFromBrowser(intent);
+            }
+        }
+
         if (getIntent().getExtras() != null) {
             if (getIntent().getBooleanExtra("isFirstTime", false)) {
-                Toasty.info(this, "Click the floating button to select your own News Sources", Toast.LENGTH_LONG).show();
+                Snackbar.make(rootLayout, "Click the floating button to select your own News Sources", Toast.LENGTH_LONG).show();
             }
         }
 
         ScheduleServiceHelper.scheduleBackgroundSync(this);
 
+    }
+
+    private void handleFavouriteFromBrowser(Intent intent) {
+        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if (sharedText != null) {
+            Log.d("HomeActivity", sharedText);
+            newsViewModel.insertBrowserPinned(sharedText);
+            viewPager.setCurrentItem(2, true);
+        }
     }
 
     @Override
@@ -175,11 +189,17 @@ public class Home extends AppCompatActivity
             startActivity(new Intent(Home.this, About.class));
         } else if (id == R.id.nav_share) {
             String shareUrl = getString(R.string.invitation_message);
-            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+//            Intent sendIntent = new Intent(Intent.ACTION_SEND);
+//            sendIntent.setAction(Intent.ACTION_SEND);
+//            sendIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
+//            sendIntent.setType("text/plain");
+//            startActivity(sendIntent);
+
+            Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, shareUrl);
             sendIntent.setType("text/plain");
-            startActivity(sendIntent);
+            startActivity(Intent.createChooser(sendIntent, "Share this app to"));
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

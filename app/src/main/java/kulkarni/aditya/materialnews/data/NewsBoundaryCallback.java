@@ -1,6 +1,6 @@
 package kulkarni.aditya.materialnews.data;
 
-import android.arch.paging.PagedList;
+import androidx.paging.PagedList;
 
 import kulkarni.aditya.materialnews.model.NewsArticle;
 

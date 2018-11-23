@@ -1,17 +1,19 @@
 package kulkarni.aditya.materialnews.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import es.dmoral.toasty.Toasty;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.NewsAdapter;
@@ -48,22 +49,23 @@ public class UnreadFragment extends Fragment {
 
     String TAG = getClass().getSimpleName();
 
-    ProgressBar progressBar;
-    NewsAdapter newsAdapter;
-    List<Sources> sourceArrayList;
-    List<NewsArticle> tempList;
-    StringBuilder sourcesString = new StringBuilder();
-    View rootView;
-    int rowCount;
-    RelativeLayout rootLayout;
-    ConnectivityManager connectivityManager;
-    NetworkInfo activeNetwork;
-    RecyclerView recyclerView;
-    Context mContext;
-    LottieAnimationView animationView;
-    DatabaseRoom mDb;
-    NewsViewModel newsViewModel;
-    SourcesViewModel sourcesViewModel;
+    private ProgressBar progressBar;
+    private NewsAdapter newsAdapter;
+    private List<Sources> sourceArrayList;
+    private List<NewsArticle> tempList;
+    private StringBuilder sourcesString = new StringBuilder();
+    private View rootView;
+    private int rowCount;
+    private CoordinatorLayout rootLayout;
+    private ConnectivityManager connectivityManager;
+    private NetworkInfo activeNetwork;
+    private RecyclerView recyclerView;
+    private Context mContext;
+    private LottieAnimationView animationView;
+    private DatabaseRoom mDb;
+    private NewsViewModel newsViewModel;
+    private SourcesViewModel sourcesViewModel;
+    private FloatingActionButton filterFAB;
 
     public UnreadFragment() {
 
@@ -72,11 +74,11 @@ public class UnreadFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sourcesViewModel = ViewModelProviders.of(this).get(SourcesViewModel.class);
         sourcesViewModel.getAllSources().observe(this, new Observer<List<Sources>>() {
             @Override
             public void onChanged(@Nullable List<Sources> sources) {
+                assert sources != null;
                 for (Sources item : sources) {
                     sourcesString.append(item.getSource());
                     sourcesString.append(",");
@@ -96,9 +98,10 @@ public class UnreadFragment extends Fragment {
             sourceArrayList = new ArrayList<>();
             mDb = DatabaseRoom.getsInstance(getActivity());
             progressBar = rootView.findViewById(R.id.progressBar);
-            rootLayout = rootView.findViewById(R.id.unreadFragment);
+            rootLayout = rootView.findViewById(R.id.unread_root_layout);
             recyclerView = rootView.findViewById(R.id.unread_recycler_view);
             animationView = rootView.findViewById(R.id.lottie_animation_view);
+//            filterFAB = rootView.findViewById(R.id.filter_fab);
 
             AppExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -122,6 +125,13 @@ public class UnreadFragment extends Fragment {
                     newsAdapter.setList(newsArticles);
                 }
             });
+
+//            filterFAB.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    startActivity(new Intent(getActivity(), FilterSources.class));
+//                }
+//            });
         }
 
         return rootView;
@@ -151,7 +161,7 @@ public class UnreadFragment extends Fragment {
                     }
                 }
                 else {
-                    Toasty.error(mContext, "Something went wrong. Try back later", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(rootLayout, "Something went wrong. Try back later", Snackbar.LENGTH_SHORT).show();
                 }
 
                 progressBar.setVisibility(View.GONE);
@@ -159,7 +169,7 @@ public class UnreadFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<NewsResponse> call, @NonNull Throwable t) {
-                Toasty.error(mContext, "Something went wrong. Try back later", Toast.LENGTH_SHORT).show();
+                Snackbar.make(rootLayout, "Something went wrong. Try back later", Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -178,7 +188,17 @@ public class UnreadFragment extends Fragment {
                     });
             snackbar.show();
         } else if (rowCount != 0 && !UtilityMethods.checkNet(Objects.requireNonNull(getActivity()))) {
-            Toasty.error(mContext, "You are offline !", Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"no net");
+//            Snackbar snackbar = Snackbar.make(rootLayout, "You are offline !", Snackbar.LENGTH_INDEFINITE).setAction("Retry", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (connectivityManager.getActiveNetworkInfo() != null) {
+//                        fetchNews();
+//                    }
+//                }
+//            });
+//            snackbar.show();
+            Toast.makeText(getActivity(), "You are offline !", Toast.LENGTH_LONG).show();
         } else if (UtilityMethods.checkNet(getActivity())) {
             fetchNews();
         }

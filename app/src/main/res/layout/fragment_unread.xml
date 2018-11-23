@@ -1,7 +1,8 @@
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:fitsSystemWindows="true"
+    android:id="@+id/unread_root_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/cream_background"
     android:layout_height="match_parent">
@@ -13,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/unread_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -36,7 +37,7 @@
     </RelativeLayout>
 
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
+        <!--android:id="@+id/filter_fab"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_gravity="bottom|end"-->
@@ -44,4 +45,4 @@
         <!--android:layout_margin="@dimen/activity_vertical_margin"-->
         <!--app:srcCompat="@drawable/ic_filter" />-->
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

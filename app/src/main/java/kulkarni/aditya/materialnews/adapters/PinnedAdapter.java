@@ -3,9 +3,9 @@ package kulkarni.aditya.materialnews.adapters;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,15 +58,26 @@ public class PinnedAdapter extends RecyclerView.Adapter<PinnedAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.title.setText(pinnedList.get(position).getTitle());
-        holder.source.setText(pinnedList.get(position).getSourceInfo().getName());
-        holder.description.setText(pinnedList.get(position).getDescription());
+        if(!pinnedList.get(position).getDescription().equals("")) {
 
-        Glide.with(mContext.getApplicationContext())
-                .load(pinnedList.get(position).getUrlToImage())
-                .into(holder.imageView);
+            holder.title.setVisibility(View.VISIBLE);
+            holder.title.setText(pinnedList.get(position).getTitle());
+            holder.description.setText(pinnedList.get(position).getDescription());
+            holder.imageView.setVisibility(View.VISIBLE);
+            Glide.with(mContext.getApplicationContext())
+                    .load(pinnedList.get(position).getUrlToImage())
+                    .into(holder.imageView);
 
 //        holder.publishedAt.setText(UtilityMethods.getTimeAgo(pinnedList.get(position).getPublishedAt()));
+
+        }
+        else {
+            holder.title.setVisibility(View.GONE);
+            holder.imageView.setVisibility(View.GONE);
+            holder.description.setText(pinnedList.get(position).getUrl());
+        }
+
+        holder.source.setText(pinnedList.get(position).getSourceInfo().getName());
 
         switch (mType) {
             case Constants.PINNED:
@@ -127,7 +138,7 @@ public class PinnedAdapter extends RecyclerView.Adapter<PinnedAdapter.ViewHolder
                     AppExecutor.getInstance().diskIO().execute(new Runnable() {
                         @Override
                         public void run() {
-                                mDb.pinnedDao().deletePinned(pinnedList.get(getAdapterPosition()));
+                            mDb.pinnedDao().deletePinned(pinnedList.get(getAdapterPosition()));
                         }
                     });
 

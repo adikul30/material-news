@@ -51,4 +51,8 @@
         <item name="colorAccent">#DED5B4</item>
     </style>
 
+    <style name="SearchEditText" parent="AppTheme">
+        <item name="colorAccent">@color/cream_background</item>
+    </style>
+
 </resources>

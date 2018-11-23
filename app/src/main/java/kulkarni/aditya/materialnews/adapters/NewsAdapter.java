@@ -4,9 +4,10 @@ import android.animation.Animator;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import android.os.Bundle;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private String mType;
     private DatabaseRoom mDb;
     private LottieAnimationView animationView;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private Bundle bundle;
 
     public NewsAdapter(Context activityContext, String type) {
         mContext = activityContext;
         mDb = DatabaseRoom.getsInstance(mContext);
         mType = type;
         this.newsList = new ArrayList<>();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
     public NewsAdapter(Context activityContext, String type, LottieAnimationView animationView) {
@@ -55,6 +60,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         mType = type;
         this.newsList = new ArrayList<>();
         this.animationView = animationView;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
     public void setList(List<NewsArticle> newsArticles) {
@@ -123,6 +129,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    bundle = new Bundle();
+                    bundle.putBoolean("browser_open",true);
                     String url = newsList.get(getAdapterPosition()).getUrl();
                     CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
                     builder.addDefaultShareMenuItem();
@@ -133,6 +141,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                     builder.setExitAnimations(mContext, R.anim.slide_in_left, R.anim.slide_out_right);
                     CustomTabsIntent customTabsIntent = builder.build();
                     customTabsIntent.launchUrl(mContext, Uri.parse(url));
+                    mFirebaseAnalytics.logEvent("CUSTOM_TAB",bundle);
                 }
             });
 

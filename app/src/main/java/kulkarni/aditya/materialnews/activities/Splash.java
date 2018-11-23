@@ -1,12 +1,12 @@
 package kulkarni.aditya.materialnews.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.model.Sources;

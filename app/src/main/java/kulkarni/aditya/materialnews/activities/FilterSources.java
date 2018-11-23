@@ -1,19 +1,30 @@
 package kulkarni.aditya.materialnews.activities;
 
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.adapters.SourcesAdapter;
@@ -32,6 +43,8 @@ public class FilterSources extends AppCompatActivity {
     DatabaseRoom mDb;
     SourcesViewModel sourcesViewModel;
     NewsViewModel newsViewModel;
+    TextInputEditText searchEditText;
+    AppCompatImageButton clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +62,8 @@ public class FilterSources extends AppCompatActivity {
         }
 
         recyclerView = findViewById(R.id.sources_recycler_view);
+        searchEditText = findViewById(R.id.search_edit_text);
+        clearButton = findViewById(R.id.clear_icon);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -61,6 +76,31 @@ public class FilterSources extends AppCompatActivity {
 
         sourcesAdapter = new SourcesAdapter(sourcesArrayList, this);
         recyclerView.setAdapter(sourcesAdapter);
+
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String searchText = s.toString().toLowerCase(Locale.getDefault());
+                sourcesAdapter.filter(searchText);
+            }
+        });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchEditText.setText("");
+            }
+        });
 
     }
 
@@ -104,7 +144,7 @@ public class FilterSources extends AppCompatActivity {
                 }
                 for (int i = 0; i < sources.size(); i++) {
                     Log.v("selectedlist", sources.get(i).getSource());
-                    sourcesViewModel.insertSource(new Sources(sources.get(i).getSource(),true));
+                    sourcesViewModel.insertSource(new Sources(sources.get(i).getSource(), true));
                 }
                 finishActivity();
             }
@@ -112,7 +152,7 @@ public class FilterSources extends AppCompatActivity {
 
     }
 
-    private void finishActivity(){
+    private void finishActivity() {
         startActivity(new Intent(this, Home.class));
         finish();
     }

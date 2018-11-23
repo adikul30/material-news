@@ -1,8 +1,13 @@
 package kulkarni.aditya.materialnews.adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kulkarni.aditya.materialnews.fragments.BlogFragment;
 import kulkarni.aditya.materialnews.fragments.PinnedFragment;
@@ -14,26 +19,35 @@ import kulkarni.aditya.materialnews.fragments.UnreadFragment;
 
 public class CustomPagerAdapter extends FragmentStatePagerAdapter {
 
-    private int mNumOfTabs;
+    private final List<Fragment> fragments = new ArrayList<>();
+    private final List<String> titles = new ArrayList<>();
 
-    public CustomPagerAdapter(FragmentManager fm, int numOfTabs) {
+    public CustomPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.mNumOfTabs = numOfTabs;
     }
 
     @Override
     public Fragment getItem(int position) {
-        switch (position){
-            case 0 : return new UnreadFragment();
-            case 1 : return new BlogFragment();
-            case 2 : return new PinnedFragment();
-
-            default: return null;
-        }
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        if (fragments.isEmpty()) {
+            return 0;
+        } else {
+            return fragments.size();
+        }
+    }
+
+    @Nullable
+    @Override
+    public CharSequence getPageTitle(int position) {
+        return titles.get(position);
+    }
+
+    public void addFragment(Fragment fragment, String title) {
+        fragments.add(fragment);
+        titles.add(title);
     }
 }

@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context="kulkarni.aditya.materialnews.activities.SearchResults">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/no_messages_error_layout"

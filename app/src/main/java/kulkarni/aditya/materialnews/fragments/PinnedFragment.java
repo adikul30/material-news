@@ -1,12 +1,12 @@
 package kulkarni.aditya.materialnews.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,23 +50,30 @@ public class PinnedFragment extends Fragment {
             recyclerView.setAdapter(new ScaleInAnimationAdapter(pinnedAdapter));
 
             newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
-            newsViewModel.getAllPinned().observe(this, new Observer<List<Pinned>>() {
-                @Override
-                public void onChanged(@Nullable List<Pinned> pinnedList) {
-                    Log.d(TAG, String.valueOf(pinnedList.size()));
-                    if(pinnedList.size() == 0){
-                        recyclerView.setVisibility(View.GONE);
-                        emptyState.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        emptyState.setVisibility(View.GONE);
-                        pinnedAdapter.setList(pinnedList);
-                    }
-                }
-            });
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        newsViewModel.getAllPinned().observe(this, new Observer<List<Pinned>>() {
+            @Override
+            public void onChanged(@Nullable List<Pinned> pinnedList) {
+                Log.d(TAG, String.valueOf(pinnedList.size()));
+                if(pinnedList.size() == 0){
+                    recyclerView.setVisibility(View.GONE);
+                    emptyState.setVisibility(View.VISIBLE);
+                }
+                else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    emptyState.setVisibility(View.GONE);
+                    pinnedAdapter.setList(pinnedList);
+                }
+            }
+        });
+
     }
 }
