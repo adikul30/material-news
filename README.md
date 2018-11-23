@@ -1,8 +1,8 @@
 ## Material News
 
 [<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-​      alt="Download from Google Play"
-​      height="80">](https://play.google.com/store/apps/details?id=kulkarni.aditya.materialnews)
+      alt="Download from Google Play"
+      height="80">](https://play.google.com/store/apps/details?id=kulkarni.aditya.materialnews)
 
 A news app implementing MVVM architecture using Android Architecture Components.
 
@@ -14,7 +14,7 @@ Libraries used : <br>
 
 To do :
 
+- [ ] [Paging](https://developer.android.com/topic/libraries/paging/)
 - [ ] [Data Binding](https://developer.android.com/topic/libraries/data-binding/)
 
 API provided by : [newsapi](https://newsapi.org)
-
