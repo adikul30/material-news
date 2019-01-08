@@ -23,8 +23,8 @@ android {
         applicationId "kulkarni.aditya.materialnews"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.3"
+        versionCode 5
+        versionName "1.4"
         resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,8 +40,8 @@ android {
 //            buildConfigField ('String', "ApiKey", apiKey)
 //            ext.enableCrashlytics = false
             buildConfigField("String", "NEWS_API_KEY", NEWS_API_KEY)
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
