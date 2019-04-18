@@ -14,6 +14,9 @@
     <!--font awesome path-->
     <string name="font_awesome">fonts/fontawesome-webfont.ttf</string>
 
+    <string name="package_name">kulkarni.aditya.materialnews</string>
+
+
     <!--font awesome icons-->
     <string name="fa_user">&#xf007;</string>
     <string name="fa_cube">&#xf1b2;</string>

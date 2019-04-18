@@ -43,7 +43,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private String mType;
     private DatabaseRoom mDb;
     private LottieAnimationView animationView;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private Bundle bundle;
 
     public NewsAdapter(Context activityContext, String type) {
@@ -51,7 +50,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         mDb = DatabaseRoom.getsInstance(mContext);
         mType = type;
         this.newsList = new ArrayList<>();
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
     public NewsAdapter(Context activityContext, String type, LottieAnimationView animationView) {
@@ -60,7 +58,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         mType = type;
         this.newsList = new ArrayList<>();
         this.animationView = animationView;
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
     }
 
     public void setList(List<NewsArticle> newsArticles) {
@@ -109,6 +106,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return newsList == null ? 0 : newsList.size();
     }
 
+    public void launchCustomTab(String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.addDefaultShareMenuItem();
+        builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.getResources(),
+                R.mipmap.ic_arrow_back_white_24dp));
+        builder.setToolbarColor(mContext.getResources().getColor(R.color.colorPrimary));
+        builder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left);
+        builder.setExitAnimations(mContext, R.anim.slide_in_left, R.anim.slide_out_right);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(mContext, Uri.parse(url));
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView title, description, source, publishedAt;
         CardView cardView;
@@ -129,19 +138,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bundle = new Bundle();
-                    bundle.putBoolean("browser_open",true);
                     String url = newsList.get(getAdapterPosition()).getUrl();
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    builder.addDefaultShareMenuItem();
-                    builder.setCloseButtonIcon(BitmapFactory.decodeResource(mContext.getResources(),
-                            R.mipmap.ic_arrow_back_white_24dp));
-                    builder.setToolbarColor(mContext.getResources().getColor(R.color.colorPrimary));
-                    builder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left);
-                    builder.setExitAnimations(mContext, R.anim.slide_in_left, R.anim.slide_out_right);
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    customTabsIntent.launchUrl(mContext, Uri.parse(url));
-                    mFirebaseAnalytics.logEvent("CUSTOM_TAB",bundle);
+                    launchCustomTab(url);
                 }
             });
 

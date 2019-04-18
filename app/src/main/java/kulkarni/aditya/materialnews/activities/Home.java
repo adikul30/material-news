@@ -2,11 +2,14 @@ package kulkarni.aditya.materialnews.activities;
 
 import android.app.SearchManager;
 
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +42,7 @@ import kulkarni.aditya.materialnews.fragments.BlogFragment;
 import kulkarni.aditya.materialnews.fragments.PinnedFragment;
 import kulkarni.aditya.materialnews.fragments.UnreadFragment;
 import kulkarni.aditya.materialnews.network.ScheduleServiceHelper;
+import kulkarni.aditya.materialnews.util.Constants;
 import kulkarni.aditya.materialnews.viewmodels.NewsViewModel;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -56,6 +60,25 @@ public class Home extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if(Intent.ACTION_SEND.equals(action) && type != null){
+            if ("text/plain".equals(type)) {
+                handleFavouriteFromBrowser(intent);
+            }
+        }
+
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getBooleanExtra("isFirstTime", false)) {
+                Snackbar.make(rootLayout, "Click the floating button to select your own News Sources", Snackbar.LENGTH_LONG).show();
+            }
+            else if (getIntent().getStringExtra(Constants.URL) != null) {
+                launchCustomTab(getIntent().getStringExtra(Constants.URL));
+            }
+        }
 
         newsViewModel = ViewModelProviders.of(this).get(NewsViewModel.class);
 
@@ -107,22 +130,6 @@ public class Home extends AppCompatActivity
                 Home.this.startActivity(new Intent(Home.this, FilterSources.class));
             }
         });
-
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if(Intent.ACTION_SEND.equals(action) && type != null){
-            if ("text/plain".equals(type)) {
-                handleFavouriteFromBrowser(intent);
-            }
-        }
-
-        if (getIntent().getExtras() != null) {
-            if (getIntent().getBooleanExtra("isFirstTime", false)) {
-                Snackbar.make(rootLayout, "Click the floating button to select your own News Sources", Toast.LENGTH_LONG).show();
-            }
-        }
 
         ScheduleServiceHelper.scheduleBackgroundSync(this);
 
@@ -209,6 +216,18 @@ public class Home extends AppCompatActivity
             //  super.onBackPressed();
         }
         return true;
+    }
+
+    public void launchCustomTab(String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.addDefaultShareMenuItem();
+        builder.setCloseButtonIcon(BitmapFactory.decodeResource(this.getResources(),
+                R.mipmap.ic_arrow_back_white_24dp));
+        builder.setToolbarColor(this.getResources().getColor(R.color.colorPrimary));
+        builder.setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left);
+        builder.setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right);
+        CustomTabsIntent customTabsIntent = builder.build();
+        customTabsIntent.launchUrl(this, Uri.parse(url));
     }
 
     @Override

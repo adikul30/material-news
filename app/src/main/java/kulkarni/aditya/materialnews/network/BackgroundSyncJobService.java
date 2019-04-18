@@ -7,21 +7,34 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Html;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import kulkarni.aditya.materialnews.R;
 import kulkarni.aditya.materialnews.activities.Home;
 import kulkarni.aditya.materialnews.data.AppExecutor;
@@ -29,10 +42,12 @@ import kulkarni.aditya.materialnews.data.DatabaseRoom;
 import kulkarni.aditya.materialnews.model.NewsArticle;
 import kulkarni.aditya.materialnews.model.NewsResponse;
 import kulkarni.aditya.materialnews.model.Sources;
+import kulkarni.aditya.materialnews.util.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 
 import static androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC;
+
 
 /**
  * Created by maverick on 5/16/18.
@@ -40,24 +55,21 @@ import static androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC;
 
 public class BackgroundSyncJobService extends JobService {
 
-    private List<Sources> sourceArrayList;
-    private List<NewsArticle> newsArticleArrayList = new ArrayList<>();
-    private List<NewsArticle> tempList;
-    StringBuilder sourcesString = new StringBuilder();
-    private AsyncTask mGetSourcesTask;
     public static final String PRIMARY_CHANNEL = "default";
     public static final String SOURCES = "sources";
     public static final String COUNTS = "counts";
-    private DatabaseRoom mDb;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    StringBuilder sourcesString = new StringBuilder();
     Bundle bundle;
     Context mContext;
     int currentCount;
+    private List<Sources> sourceArrayList;
+    private List<NewsArticle> newsArticleArrayList = new ArrayList<>();
+    private List<NewsArticle> tempList;
+    private DatabaseRoom mDb;
 
     @Override
     public boolean onStartJob(JobParameters job) {
         mContext = this;
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         initNotification();
         mDb = DatabaseRoom.getsInstance(this);
 
@@ -72,7 +84,6 @@ public class BackgroundSyncJobService extends JobService {
                 }
                 bundle = new Bundle();
                 bundle.putString("sources_string", sourcesString.toString());
-                mFirebaseAnalytics.logEvent(SOURCES, bundle);
                 fetchNews();
             }
         });
@@ -151,7 +162,6 @@ public class BackgroundSyncJobService extends JobService {
         bundle.putString("currentCount", String.valueOf(currentCount));
         bundle.putString("previousCount", String.valueOf(previousCount));
         bundle.putString("difference", String.valueOf(difference));
-        mFirebaseAnalytics.logEvent(COUNTS, bundle);
 
         if (difference > 0) {
 
@@ -168,37 +178,91 @@ public class BackgroundSyncJobService extends JobService {
     }
 
     private void sendNotification(int count) {
-        bundle = new Bundle();
-        bundle.putString("notif_count", String.valueOf(count));
-        bundle.putString("notif_list_size", String.valueOf(newsArticleArrayList.size()));
-        mFirebaseAnalytics.logEvent(COUNTS, bundle);
+        for (int i = 0; i < count && i < 5; i++) {
+            loadImage(newsArticleArrayList.get(i));
+        }
+    }
+
+    private void loadImage(NewsArticle newsArticle) {
 
         //Notification setup
+
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(BackgroundSyncJobService.this, PRIMARY_CHANNEL)
                 .setSmallIcon(R.drawable.ic_icons8_google_news)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setContentTitle(count + " new notifications")
                 .setVisibility(VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        for (int i = 0; i < count; i++) {
-            inboxStyle.addLine(newsArticleArrayList.get(i).getTitle());
+        String miscTitle = newsArticle.getTitle();
+        String miscContent = newsArticle.getDescription();
+        String trimmedMsg;
+        if (miscContent.length() > 50) {
+            trimmedMsg = miscContent.substring(0, 50) + "...";
+        } else {
+            trimmedMsg = miscContent;
         }
+
+        mBuilder.setContentTitle(Html.fromHtml(miscTitle))
+                .setContentText(trimmedMsg);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             mBuilder.setColor(getColor(R.color.blue_500));
         }
-        mBuilder.setStyle(inboxStyle);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = () -> Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(newsArticle.getUrlToImage())
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        e.printStackTrace();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        generateNotification(
+                                mBuilder.setStyle(
+                                        new NotificationCompat.BigPictureStyle()
+                                                .bigLargeIcon(null)
+                                                .bigPicture(resource)
+                                ).setLargeIcon(resource), newsArticle.getUrl()
+                        );
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        generateNotification(
+                                mBuilder.setStyle(
+                                        new NotificationCompat.InboxStyle().addLine(newsArticle.getTitle())
+                                ), newsArticle.getUrl());
+                    }
+                });
+
+        handler.post(runnable);
+    }
+
+    private void generateNotification(NotificationCompat.Builder mBuilder, String url) {
 
         //PendingIntent setup
         Intent activityFromNotification = new Intent(BackgroundSyncJobService.this, Home.class);
+        activityFromNotification.putExtra(Constants.URL, url);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(BackgroundSyncJobService.this);
         stackBuilder.addNextIntentWithParentStack(activityFromNotification);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        int pendingIntentId = new Random().nextInt(543254);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(pendingIntentId, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(notificationPendingIntent);
 
+        int notificationId = new Random().nextInt(543254);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(BackgroundSyncJobService.this);
-        notificationManager.notify(5468, mBuilder.build());
+        notificationManager.notify(getResources().getString(R.string.package_name), notificationId, mBuilder.build());
     }
 }

@@ -23,8 +23,8 @@ android {
         applicationId "kulkarni.aditya.materialnews"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.4"
+        versionCode 6
+        versionName "1.5"
         resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -48,6 +48,11 @@ android {
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
 }
