@@ -12,9 +12,10 @@ Libraries used : <br>
 3. [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)<br>
 4. [Retrofit](https://square.github.io/retrofit)<br>
 
-To do :
-
-- [ ] [Paging](https://developer.android.com/topic/libraries/paging/)
+To do for *paging* branch :
+- [x] [Paging](https://developer.android.com/topic/libraries/paging/)
 - [ ] [Data Binding](https://developer.android.com/topic/libraries/data-binding/)
+- [ ] [Coroutines](https://developer.android.com/topic/libraries/architecture/coroutines)
+- [ ] Refactor Kotlin code
 
 API provided by : [newsapi](https://newsapi.org)
